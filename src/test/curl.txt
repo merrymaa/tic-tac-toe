@@ -1,0 +1,21 @@
+curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_id": "ea6ff0e9-a483-4178-8277-0b416177cec6",
+  "field": [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", "X", " "]
+  ]
+}'
+
+curl -X POST http://localhost:5000/make_move/22a983d9-8f07-49d5-82e5-6717d4c9f63d \
+-H "Content-Type: application/json" \
+  -d '{
+  "game_id": "22a983d9-8f07-49d5-82e5-6717d4c9f63d",
+  "field": [
+    ["O", "O", " "],
+    ["X", "X", " "],
+    [" ", "X", " "]
+  ]
+}'
