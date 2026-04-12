@@ -1,6 +1,7 @@
 from constants import SIZE_FIELD
+from typing import List
 
 
 class FieldWeb():
     def __init__(self):
-        self.field = [[' ' for _ in range(SIZE_FIELD)] for _ in range(SIZE_FIELD)]
+        self.field: List[List[str]] = [[' ' for _ in range(SIZE_FIELD)] for _ in range(SIZE_FIELD)]

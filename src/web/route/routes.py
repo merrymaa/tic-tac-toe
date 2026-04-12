@@ -7,6 +7,7 @@ from web.module.controller_web import ControllerWeb
 game_bp = Blueprint('game', __name__)
 
 
+
 @game_bp.route('/create_game')
 def create_game():
     game = CurrentGame()
@@ -18,6 +19,20 @@ def create_game():
         'field': game.field.field
     })
 
+@game_bp.route('/<user_name>')
+def new_game(user_name):
+    game = CurrentGame()
+    game.set_user_name(user_name)
+
+    game.user_info.password_hash = "tratata" # NB!!!!
+    container.game_service.repository.save(game)
+
+    return jsonify({
+        'message': 'New Game created',
+        'user_name': user_name,
+        'game_id': str(game.UUID),
+        'field': game.field.field
+    })
 
 @game_bp.route('/get_game/<game_id>')
 def get_game(game_id):
