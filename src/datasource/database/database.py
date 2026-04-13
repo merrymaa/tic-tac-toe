@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine, String, Column, ARRAY
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
 
 # from sqlalchemy.exc import OperationalError
 
 DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/game_db"
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 
 
 class Base(DeclarativeBase):
@@ -12,17 +12,19 @@ class Base(DeclarativeBase):
 
 
 class User(Base):
+    """"Таблица SQLAlchemy - Users"""
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_name: Mapped[str] = mapped_column(String(40), unique=True)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    uuid: Mapped[str] = Column(String(40), primary_key=True, nullable=False)
+    login: Mapped[str] = Column(String(40), unique=True, nullable=False)
+    hashed_password: Mapped[str] = Column(String(255), nullable=False)
 
     def __repr__(self):
-        return f"<User_id: {self.id}, user_name: {self.user_name}>"
+        return f"<User_id: {self.uuid}, user_name: {self.login}>"
 
 
 class Games(Base):
+    """"Таблица SQLAlchemy - Games"""
     __tablename__ = "games"
 
     uuid = Column(String, primary_key=True, nullable=False)
@@ -32,14 +34,6 @@ class Games(Base):
 def init_db():
     Base.metadata.create_all(engine)
 
-
 SessionLocal = sessionmaker(bind=engine)
 
-# session = SessionLocal()
-# user_name = game_dto.user_info.name
-# user_pass = game_dto.user_info.password_hash
-#
-# new_user = User(user_name=user_name, hashed_password=user_pass)
-# session.add(new_user)
-# session.commit()
-# session.close()
+

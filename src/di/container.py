@@ -2,6 +2,7 @@ from datasource.model.storage import Storage
 from datasource.repository.repository_impl import GameRepository
 from datasource.repository.repository_backed_service import RepositoryBackedService
 from datasource.database.database import init_db, SessionLocal
+from datasource.database.user_repositort_impl import UserRepositoryImpl
 
 
 class Container:
@@ -10,6 +11,8 @@ class Container:
         self.storage = Storage()
         self.repository = GameRepository(self.storage, SessionLocal)
         self.game_service = RepositoryBackedService(self.repository)
+        self.user_repository = UserRepositoryImpl()
+
 
 
 container = Container()

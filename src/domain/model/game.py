@@ -11,4 +11,4 @@ class CurrentGame():
         self.user_info = User()
 
     def set_user_name(self, user_name):
-        self.user_info.name = user_name
+        self.user_info.login = user_name

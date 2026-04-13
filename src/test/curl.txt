@@ -9,13 +9,9 @@ curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec
   ]
 }'
 
-curl -X POST http://localhost:5000/make_move/22a983d9-8f07-49d5-82e5-6717d4c9f63d \
+curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
-  "game_id": "22a983d9-8f07-49d5-82e5-6717d4c9f63d",
-  "field": [
-    ["O", "O", " "],
-    ["X", "X", " "],
-    [" ", "X", " "]
-  ]
+  "login": "user_5",
+  "password": "pa3453454"
 }'

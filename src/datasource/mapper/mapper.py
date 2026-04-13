@@ -13,8 +13,9 @@ class Mapper:
 
         game_dto.field.field = game.field.field
         game_dto.uuid = game.UUID
-        game_dto.user_info.name = game.user_info.name
+        game_dto.user_info.login = game.user_info.login
         game_dto.user_info.password_hash = game.user_info.password_hash
+        game_dto.user_info.uuid = str(game.user_info.uuid)
 
         return game_dto
 
@@ -23,8 +24,8 @@ class Mapper:
         game = CurrentGame()
         game.UUID = game_dto.uuid
         game.field.field = game_dto.field.field
-        game.user_info.name = game_dto.user_info.name
+        game.user_info.login = game_dto.user_info.login
         game.user_info.password_hash = game_dto.user_info.password_hash
-
+        game.user_info.uuid = game_dto.user_info.uuid
 
         return game

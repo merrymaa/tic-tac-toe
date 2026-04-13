@@ -2,8 +2,7 @@ from datasource.repository.repository_interface import Repository
 from domain.model.game import CurrentGame
 from datasource.model.storage import Storage
 from datasource.mapper.mapper import Mapper
-from sqlalchemy.orm import sessionmaker
-from datasource.database.database import engine, User ##
+from datasource.database.database import User
 
 
 
