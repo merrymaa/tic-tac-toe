@@ -14,14 +14,11 @@ game_bp = Blueprint('game', __name__)
 @validate_body(SignUpRequest)
 def register_user():
     validated_request = get_valid_request()
-    user_login = validated_request.body.login
-    user_password = validated_request.body.password
-
-    new_user = User(user_login, user_password)
-    # container.user_repository.save(new_user)
-    container.user_repository.register_user(validated_request)
-    return {"message": f"{user_login} was successfull registered"}, 201
-
+    success = container.user_service.register(validated_request.body)
+    if success:
+        return {"message": f"{validated_request.body.login} was successful registered"}, 201
+    else:
+        return {"error": "Login exists"}, 409
 
 
 @game_bp.route('/create_game')
@@ -35,12 +32,13 @@ def create_game():
         'field': game.field.field
     })
 
+
 @game_bp.route('/<user_name>')
 def new_game(user_name):
     game = CurrentGame()
     game.set_user_name(user_name)
 
-    game.user_info.hashed_password = "tratata" # NB!!!!
+    game.user_info.hashed_password = "tratata"  # NB!!!!
     # container.game_service.repository.save(game)
     container.user_repository.save(game.user_info)
 
