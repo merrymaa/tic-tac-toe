@@ -12,6 +12,22 @@ curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec
 curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
-  "login": "user_5",
+  "login": "user_aut",
   "password": "pa3453454"
 }'
+
+curl -X POST http://localhost:5000/authorize \
+-H "Content-Type: application/json" \
+  -d '{
+  "login": "user_1",
+  "password": "pa3453454"
+}'
+
+echo -n "user_4:pa3453454" | base64
+dXNlcl80OnBhMzQ1MzQ1NA==
+
+
+
+curl -X POST http://localhost:5000/authorize \
+   -H "Authorization: Basic dXNlcl80OnBhMzQ1MzQ1NA==
+"

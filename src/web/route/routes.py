@@ -5,9 +5,21 @@ from domain.model.game import CurrentGame
 from di.container import container
 from web.module.controller_web import ControllerWeb
 from datasource.database.sign_up_request import SignUpRequest
-from datasource.model.user import User
+import base64
 
 game_bp = Blueprint('game', __name__)
+
+
+def decode_base(header: str):
+    if not header or not header.startswith('Basic '):
+        return None, None
+    try:
+        encoded = header.split(' ')[1]
+        decoded = base64.b64decode(encoded).decode('utf-8')
+        login, password = decoded.split(':', 1)
+        return login, password
+    except Exception:
+        return None, None
 
 
 @game_bp.route('/register', methods=['POST'])
@@ -19,6 +31,19 @@ def register_user():
         return {"message": f"{validated_request.body.login} was successful registered"}, 201
     else:
         return {"error": "Login exists"}, 409
+
+
+@game_bp.route('/authorize', methods=['POST'])
+def authorize_user():
+    auth_header = request.headers.get('Authorization')
+    login, password = decode_base(auth_header)
+    if not login or not password:
+        return jsonify({"error": "Invalid or missing Basic Auth header"}), 401
+
+    user_uuid = container.user_service.authorize(login, password)
+    if user_uuid is None:
+        return jsonify({"error": "Invalid credentials"}), 401
+    return jsonify({"user_uuid": user_uuid}), 200
 
 
 @game_bp.route('/create_game')

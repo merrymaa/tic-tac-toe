@@ -40,5 +40,12 @@ class UserRepositoryImpl(UserRepository):
 
 
 
-    def get_by_login(self, login: str) -> User:
-        pass
+    def find_by_login(self, login: str):
+        """"Ищет пользователя по логину и возвращает его UUID (str)"""
+        session_db = self.session_factory()
+        try:
+            return session_db.query(User).filter(User.login == login).first()
+
+        finally:
+            session_db.close()
+

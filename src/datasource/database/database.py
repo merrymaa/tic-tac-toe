@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 
 
 class User(Base):
-    """"Таблица SQLAlchemy - Users"""
+    """"Объект SQLAlchemy - Users"""
     __tablename__ = "users"
 
     uuid: Mapped[str] = Column(String(40), primary_key=True, nullable=False)
@@ -24,7 +24,7 @@ class User(Base):
 
 
 class Games(Base):
-    """"Таблица SQLAlchemy - Games"""
+    """"Объект SQLAlchemy - Games"""
     __tablename__ = "games"
 
     uuid = Column(String, primary_key=True, nullable=False)

@@ -1,6 +1,6 @@
 from domain.service.user_service import UserService
 from datasource.database.sign_up_request import SignUpRequest
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from datasource.database.user_repositort_impl import UserRepositoryImpl
 
 
@@ -13,6 +13,11 @@ class UserServiceImpl(UserService):
 
         return self.user_rep.register_user(sign_up_request.login, hashed_password)
 
-
-
+    def authorize(self, login: str, password: str) -> str | None:
+        user = self.user_rep.find_by_login(login)
+        if user and check_password_hash(user.hashed_password, password):
+            print("authoris was successful ")
+            return user.uuid
+        print("authoris was not successful ")
+        return None
 
