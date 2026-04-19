@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, String, Column, ARRAY
+from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
 
 # from sqlalchemy.exc import OperationalError
@@ -29,6 +30,16 @@ class Games(Base):
 
     uuid = Column(String, primary_key=True, nullable=False)
     field = Column(ARRAY(String, dimensions=2), nullable=False)
+    status = Column(String, default="waiting", nullable=False) # waiting, game
+    type = Column(String, nullable=False)
+    step_player = Column(String, nullable=True) # следующий ход игрока
+    player_1_uuid = Column(String, nullable=True)   # UUID игрока за X
+    player_2_uuid = Column(String, nullable=True)   # UUID игрока за O (для компьютера = "computer")
+    player_1_sign = Column(CHAR, default="X")
+    player_2_sign = Column(CHAR, default="O")
+    draw = Column(String, nullable=True) # ничья
+    winner = Column(String, nullable=True)     # победитель (если есть)
+
 
 
 def init_db():

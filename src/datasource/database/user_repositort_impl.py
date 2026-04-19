@@ -1,5 +1,5 @@
 from datasource.database.database import User, SessionLocal
-from datasource.database.user_repository_interface import UserRepository
+from datasource.database.user_db_interface import UserRepository
 from datasource.database.sign_up_request import SignUpRequest
 from uuid import uuid4
 from werkzeug.security import generate_password_hash

@@ -1,6 +1,8 @@
 curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
   -H "Content-Type: application/json" \
   -d '{
+  "game_type" : "AI",
+  "game_status" : "start"
   "game_id": "ea6ff0e9-a483-4178-8277-0b416177cec6",
   "field": [
     [" ", " ", " "],
@@ -9,25 +11,34 @@ curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec
   ]
 }'
 
+запрос на регистрацию пользователя:
 curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
-  "login": "user_aut",
+  "login": "evg",
   "password": "pa3453454"
 }'
 
+преобразование пары логин:пароль в формат base64:
+echo -n "evg:pa3453454" | base64
+ZXZnOnBhMzQ1MzQ1NA==
+
+запрос на авторизацию пользователя:
 curl -X POST http://localhost:5000/authorize \
--H "Content-Type: application/json" \
+   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA=="
+
+запрос на создание новой игры (с компьютером):
+curl -X POST http://localhost:5000/new_game \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
   -d '{
-  "login": "user_1",
-  "password": "pa3453454"
+  "game_type" : "AI"
 }'
 
-echo -n "user_4:pa3453454" | base64
-dXNlcl80OnBhMzQ1MzQ1NA==
-
-
-
-curl -X POST http://localhost:5000/authorize \
-   -H "Authorization: Basic dXNlcl80OnBhMzQ1MzQ1NA==
-"
+запрос на создание новой игры (с человеком):
+curl -X POST http://localhost:5000/new_game \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_type" : "HUMAN"
+}'

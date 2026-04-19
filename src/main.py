@@ -28,8 +28,8 @@ def main():
     """"Функция main для web слоя"""
     storage = Storage()
     app = create_app(storage)
-    print("Сервер запущен.")
-    print("Открой в браузере: http://localhost:5000/create_game")
+    print("Сервер запущен. http://localhost:5000")
+    # print("Открой в браузере: http://localhost:5000/create_game")
     app.run(host='0.0.0.0', port=5000, debug=True)
 
 

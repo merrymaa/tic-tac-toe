@@ -4,6 +4,7 @@ from datasource.repository.repository_backed_service import RepositoryBackedServ
 from datasource.database.database import init_db, SessionLocal
 from datasource.database.user_repositort_impl import UserRepositoryImpl
 from domain.service.user_service_impl import UserServiceImpl
+from datasource.database.game_db_impl import GameDbImpl
 
 class Container:
     def __init__(self):
@@ -13,6 +14,7 @@ class Container:
         self.game_service = RepositoryBackedService(self.repository)
         self.user_repository = UserRepositoryImpl()
         self.user_service = UserServiceImpl(self.user_repository)
+        self.user_bd_service = GameDbImpl()
 
 
 
