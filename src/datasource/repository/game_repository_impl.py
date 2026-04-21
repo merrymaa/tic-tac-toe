@@ -1,0 +1,66 @@
+from datasource.database.database import Games, SessionLocal
+from datasource.repository.game_repository_interface import GameRepository
+from domain.model.game import CurrentGame
+from datasource.mapper.mapper import Mapper
+from web.model.game_web import GameWebDTO
+
+
+class GameRepositoryImpl(GameRepository):
+    def __init__(self, session_factory=SessionLocal):
+        self.session_factory = session_factory
+
+    def save_game(self, game: CurrentGame) -> None:
+        with self.session_factory() as session:
+            db_game = session.query(Games).filter(Games.uuid == game.uuid).first()
+            if db_game:
+                # Обновляем поля
+                db_game.field = game.field.field
+                db_game.status = game.status
+                db_game.type = game.type
+                db_game.step_player = game.step_player
+                db_game.player_1_uuid = game.player_1_uuid
+                db_game.player_2_uuid = game.player_2_uuid
+                db_game.player_1_sign = game.player_1_sign
+                db_game.player_2_sign = game.player_2_sign
+                db_game.draw = game.draw
+                db_game.winner = game.winner
+            else:
+                new_game = Games(
+                    uuid=game.uuid,
+                    field=game.field.field,
+                    status=game.status,
+                    type=game.type,
+                    step_player=game.step_player,
+                    player_1_uuid=game.player_1_uuid,
+                    player_2_uuid=game.player_2_uuid,
+                    player_1_sign=game.player_1_sign,
+                    player_2_sign=game.player_2_sign,
+                    draw=game.draw,
+                    winner=game.winner
+                )
+                session.add(new_game)
+            session.commit()
+
+    def add_game(self, game: CurrentGame) -> None:
+        session_db = self.session_factory()
+        # CurrentGame -> Games
+        game_dt_src = Mapper.domain_to_datasource(game)
+        session_db.add(game_dt_src)
+        session_db.commit()
+        session_db.close()
+
+    def get_active_games(self) -> list:
+        with self.session_factory() as session:
+            active_games = session.query(Games).filter(
+                Games.winner.is_(None),
+                Games.draw.is_(None)
+            ).all()
+            return active_games
+
+    def get_game(self, game_uuid: str) -> Games:
+        with self.session_factory() as session:
+            game = session.query(Games).filter(Games.uuid == game_uuid).first()
+            return game
+
+
+

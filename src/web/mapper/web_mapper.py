@@ -6,16 +6,72 @@ from datasource.database.database import Games
 
 class WebMapper:
     """"
-    Преобразует объекты между собой:
-    game_web - объект web слоя
-    game_bd - объект БД
-    game_domain- объект домаин слоя
+    WebDTO
+    DomainDTO
+    DatasourceDTO
+
+    Преобразует объекты между собой
+
     """
+    @staticmethod
+    def datasource_to_web(datasource_dto) -> GameWebDTO:
+        game_web = GameWebDTO()
+
+        game_web.uuid = datasource_dto.uuid
+        game_web.field.field = datasource_dto.field
+        game_web.status = datasource_dto.status  # waiting, game
+        game_web.type = datasource_dto.type
+        game_web.step_player = datasource_dto.step_player  # следующий ход игрока
+        game_web.player_1_uuid = datasource_dto.player_1_uuid  # UUID игрока за X
+        game_web.player_2_uuid = datasource_dto.player_2_uuid  # UUID игрока за O (для компьютера = "computer")
+        game_web.player_1_sign = datasource_dto.player_1_sign
+        game_web.player_2_sign = datasource_dto.player_2_sign
+        game_web.draw = datasource_dto.draw  # ничья
+        game_web.winner = datasource_dto.winner
+
+        return game_web
+
+    # web_to_domain
+    @staticmethod
+    def web_to_domain(game_web: GameWebDTO) -> CurrentGame:
+        game_domain = CurrentGame()
+
+        game_domain.uuid = game_web.uuid
+        game_domain.field.field = game_web.field.field
+        game_domain.status = game_web.status  # waiting, game
+        game_domain.type = game_web.type
+        game_domain.step_player = game_web.step_player  # следующий ход игрока
+        game_domain.player_1_uuid = game_web.player_1_uuid  # UUID игрока за X
+        game_domain.player_2_uuid = game_web.player_2_uuid  # UUID игрока за O (для компьютера = "computer")
+        game_domain.player_1_sign = game_web.player_1_sign
+        game_domain.player_2_sign = game_web.player_2_sign
+        game_domain.draw = game_web.draw  # ничья
+        game_domain.winner = game_web.winner
+
+        return game_domain
+
+    @staticmethod
+    def domain_to_web(game_domain: CurrentGame ) -> GameWebDTO:
+        game_web = GameWebDTO()
+
+        game_web.uuid = game_domain.uuid
+        game_web.field = game_domain.field.field
+        game_web.status = game_domain.status  # waiting, game
+        game_web.type = game_domain.type
+        game_web.step_player = game_domain.step_player  # следующий ход игрока
+        game_web.player_1_uuid = game_domain.player_1_uuid  # UUID игрока за X
+        game_web.player_2_uuid = game_domain.player_2_uuid  # UUID игрока за O (для компьютера = "computer")
+        game_web.player_1_sign = game_domain.player_1_sign
+        game_web.player_2_sign = game_domain.player_2_sign
+        game_web.draw = game_domain.draw  # ничья
+        game_web.winner = game_domain.winner
+
+        return game_web
 
     @staticmethod
     def to_web(game: CurrentGame) -> GameWebDTO:
         """"Преобразование объекта домаин слоя Game в объект веб слоя GameWebDTO"""
-        game_web_dto = GameWebDTO(game.UUID, game.field.field)
+        game_web_dto = GameWebDTO(game.uuid, game.field.field)
 
         return game_web_dto
 
@@ -30,7 +86,8 @@ class WebMapper:
 
     @staticmethod
     def from_web_to_db(game_web: GameWebDTO) -> Games:
-        game_db = Games(uuid=game_web.uuid, field=game_web.field.field, player_1_uuid=game_web.player_uuid, type=game_web.game_type,
+        game_db = Games(uuid=game_web.uuid, field=game_web.field.field, player_1_uuid=game_web.player_uuid,
+                        type=game_web.game_type,
                         step_player=game_web.step_next_player, player_2_uuid=game_web.player_2)
 
         return game_db

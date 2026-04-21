@@ -5,19 +5,25 @@ from web.mapper.web_mapper import WebMapper
 from web.model.field_web import FieldWeb
 
 
-class ControllerWeb():
+class ControllerWeb:
 
     def __init__(self, game_service: RepositoryBackedService):
         self.game_service = game_service
 
     def make_move(self, game_web: GameWebDTO) -> GameWebDTO:
-        domain_game = WebMapper.to_domain(game_web)
-        updated_game = self.game_service.get_next_step(domain_game)
-        game_web_result = WebMapper.to_web(updated_game)
 
-        if isinstance(game_web_result.field, list):
-            field_obj = FieldWeb()
-            field_obj.field = game_web_result.field
-            game_web_result.field = field_obj
+        domain_game = WebMapper.web_to_domain(game_web)
+        if game_web.type == "AI":
+            updated_game = self.game_service.get_next_step(domain_game) # объект domain слоя CurrentGame
+            game_web_result = WebMapper.to_web(updated_game)
+        else:
+            self.game_service.save_game(domain_game)
+            game_web_result = WebMapper.datasource_to_web(self.game_service.get_game(game_web.uuid))
 
         return game_web_result
+
+    def download_game(self, game_uuid) -> GameWebDTO:
+
+        downloaded_game = self.game_service.get_game(game_uuid)
+
+        return WebMapper.datasource_to_web(downloaded_game)

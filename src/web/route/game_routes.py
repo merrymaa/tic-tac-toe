@@ -1,13 +1,7 @@
 from flask import Blueprint, jsonify, request
-from uuid import UUID, uuid4
-from flask_reqcheck import validate_body, get_valid_request
-from domain.model.game import CurrentGame
 from di.container import container
 from web.module.controller_web import ControllerWeb
-from datasource.database.sign_up_request import SignUpRequest
-import base64
 from web.module.user_authenticator import UserAuthenticator
-from datasource.database.database import Games
 from web.model.game_web import GameWebDTO
 from web.mapper.web_mapper import WebMapper
 
@@ -22,17 +16,29 @@ def create_game(user_uuid):
     game_type = data['game_type']
 
     new_game = GameWebDTO()
+    print(new_game.uuid)
     new_game.set_uuid_player(user_uuid)
     new_game.set_game_type(game_type)
 
-    container.user_bd_service.save_game(WebMapper.from_web_to_db(new_game))
-
-
+    container.game_service.add_game(WebMapper.web_to_domain(new_game))
 
     return jsonify({
         'message': 'Game created',
         'game_id': new_game.uuid
     })
+
+
+@game_bp.route('/get_games')
+@UserAuthenticator.protected
+def get_games(user_uuid):
+    """"Создание новой игры: с человеком или с компьютером"""
+    games = container.user_bd_service.get_active_games()
+    all_games = []
+
+    for game in games:
+        all_games.append(game.uuid)
+
+    return jsonify({f'query from user {user_uuid}, all active games': all_games})
 
 
 # @game_bp.route('/<user_name>')
@@ -64,11 +70,12 @@ def create_game(user_uuid):
 #                     'message': 'Game loaded'})
 
 
-@game_bp.route('/make_move/<game_id>', methods=['POST'])
+@game_bp.route('/make_move', methods=['POST'])
 @UserAuthenticator.protected
-def make_move(game_id):
+# def make_move(game_id):
+def make_move(user_uuid):
     try:
-        from web.model.field_web import FieldWeb
+        # from web.model.field_web import FieldWeb
         from web.model.game_web import GameWebDTO
         if not request.is_json:
             return jsonify({
@@ -79,12 +86,14 @@ def make_move(game_id):
         if not data:
             return jsonify({'error_2': 'No data provided'}), 400
         field = data.get('field')
-        game_field = FieldWeb()
-        game_field.field = field
-        game_web = GameWebDTO(game_id, game_field)
+        uuid_game = data.get('uuid_game')
+
         controller = ControllerWeb(container.game_service)
+        game_web = controller.download_game(uuid_game)
+        game_web.field.field = field
         game_web = controller.make_move(game_web)
-        return jsonify({'field': game_web.field.field,
+
+        return jsonify({'field': game_web.field,
                         'game_id': str(game_web.uuid),
                         'message': 'Game changed'})
 

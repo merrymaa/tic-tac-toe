@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_reqcheck import validate_body, get_valid_request
 from di.container import container
-from datasource.database.sign_up_request import SignUpRequest
+from datasource.model.sign_up_request import SignUpRequest
 import base64
 
 
@@ -40,7 +40,7 @@ def authorize_user():
 
     user_uuid = container.user_service.authorize(login, password)
     if user_uuid is None:
-        return jsonify({"error": "Invalid credentials"}), 401
+        return jsonify({"error": "Authorization not success"}), 401
     return jsonify({"user_uuid": user_uuid}), 200
 
 

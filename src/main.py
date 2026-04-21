@@ -2,7 +2,6 @@
 # from datasource.repository.repository_backed_service import RepositoryBackedService
 # from datasource.repository.repository_impl import GameRepository
 # from domain.helpers.prints import *
-from datasource.model.storage import Storage
 from web.app import create_app
 
 
@@ -26,10 +25,9 @@ from web.app import create_app
 
 def main():
     """"Функция main для web слоя"""
-    storage = Storage()
-    app = create_app(storage)
-    print("Сервер запущен. http://localhost:5000")
-    # print("Открой в браузере: http://localhost:5000/create_game")
+
+    app = create_app()
+    print("Сервер запущен на http://localhost:5000")
     app.run(host='0.0.0.0', port=5000, debug=True)
 
 

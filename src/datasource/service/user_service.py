@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from datasource.database.sign_up_request import SignUpRequest
-from datasource.database.database import User
-
+from datasource.model.sign_up_request import SignUpRequest
 
 
 class UserService(ABC):

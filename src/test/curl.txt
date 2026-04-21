@@ -1,17 +1,4 @@
-curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
-  -H "Content-Type: application/json" \
-  -d '{
-  "game_type" : "AI",
-  "game_status" : "start"
-  "game_id": "ea6ff0e9-a483-4178-8277-0b416177cec6",
-  "field": [
-    [" ", " ", " "],
-    [" ", " ", " "],
-    [" ", "X", " "]
-  ]
-}'
-
-запрос на регистрацию пользователя:
+запрос на регистрацию нового пользователя:
 curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
@@ -23,9 +10,17 @@ curl -X POST http://localhost:5000/register \
 echo -n "evg:pa3453454" | base64
 ZXZnOnBhMzQ1MzQ1NA==
 
-запрос на авторизацию пользователя:
+$ echo -n "evg_2:pa3453454" | base64
+ZXZnXzI6cGEzNDUzNDU0
+
+
+запрос на авторизацию пользователя (пользователь существует):
 curl -X POST http://localhost:5000/authorize \
    -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA=="
+
+запрос на авторизацию пользователя (пользователь не существует):
+curl -X POST http://localhost:5000/authorize \
+   -H "Authorization: Basic ZXZnXzI6cGEzNDUzNDU0"
 
 запрос на создание новой игры (с компьютером):
 curl -X POST http://localhost:5000/new_game \
@@ -42,3 +37,56 @@ curl -X POST http://localhost:5000/new_game \
   -d '{
   "game_type" : "HUMAN"
 }'
+
+запрос на получение всех активных игр:
+curl -X GET http://localhost:5000/get_games \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_type" : "HUMAN"
+}'
+
+
+# сделать ход
+curl -X POST http://localhost:5000/make_move \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_type" : "AI",
+  "field": [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", "X", " "]
+    ],
+    "uuid_game": "906cf540-6890-49b2-b8ec-19df634abdc9"
+}'
+
+curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_type" : "AI",
+  "game_status" : "start"
+  "game_id": "ea6ff0e9-a483-4178-8277-0b416177cec6",
+  "field": [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", "X", " "]
+  ]
+}'
+
+
+
+curl -X POST http://localhost:5000/make_move \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_type" : "AI",
+  "field": [
+    ["O", " ", "O"],
+    [" ", "X", " "],
+    [" ", "O", "X"]
+    ],
+    "uuid_game": "38879a95-710e-4105-b815-c608f8048d1f"
+}'
+
+
