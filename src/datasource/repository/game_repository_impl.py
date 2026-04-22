@@ -57,10 +57,23 @@ class GameRepositoryImpl(GameRepository):
             ).all()
             return active_games
 
-    def get_game(self, game_uuid: str) -> Games:
+    def get_game(self, game_uuid: str) -> CurrentGame:
         with self.session_factory() as session:
             game = session.query(Games).filter(Games.uuid == game_uuid).first()
-            return game
+            current_game = CurrentGame()
+
+            current_game.uuid = game.uuid
+            current_game.field.field = game.field
+            current_game.status = game.status
+            current_game.type = game.type
+            current_game.step_player = game.step_player
+            current_game.player_1_uuid =game.player_1_uuid
+            current_game.player_2_uuid = game.player_2_uuid
+            current_game.player_1_sign = game.player_1_sign
+            current_game.player_2_sign = game.player_2_sign
+            current_game.draw =game.draw
+            current_game.winner = game.winner
+        return current_game
 
 
 

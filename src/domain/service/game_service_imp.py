@@ -1,6 +1,6 @@
 from domain.service.game_service import GameService
 from domain.model.game import CurrentGame
-from constants import HUMAN, AI, BEST_SCORE_MAX, BEST_SCORE_MIN
+from constants import HUMAN, AI, BEST_SCORE_MAX, BEST_SCORE_MIN, SIZE_FIELD
 
 
 class GameServiceMinimax(GameService):
@@ -62,26 +62,18 @@ class GameServiceMinimax(GameService):
                 best_score = min(score, best_score)
             return best_score
 
-    def validate_game(self, game: CurrentGame) -> bool:
-        field = game.field.field
+    def validate_game(self, current_game: CurrentGame, old_game: CurrentGame) -> bool:
+        """Функция проверяет неизменность предыдущих ходов"""
+        current_field = current_game.field.field
+        old_field = old_game.field.field
 
-        count_human = sum(row.count(HUMAN) for row in field)
-        count_ai = sum(row.count(AI) for row in field)
-
-        if not (count_human == count_ai or count_human == count_ai + 1):
-            return False
-
-        human_win = self.check_win(field, HUMAN)
-        ai_win = self.check_win(field, AI)
-        if human_win and ai_win:
-            return False
-
-        if human_win and count_human != count_ai + 1:
-            return False
-        if ai_win and count_human != count_ai:
-            return False
-
+        for i in range(SIZE_FIELD):
+            for j in range(SIZE_FIELD):
+                if old_field[i][j] == HUMAN or old_field[i][j] == AI:
+                    if current_field[i][j] != old_field[i][j]:
+                        return False
         return True
+
 
     @staticmethod
     def check_win(field, player) -> bool:

@@ -30,7 +30,7 @@ class Games(Base):
 
     uuid = Column(String, primary_key=True, nullable=False)
     field = Column(ARRAY(String, dimensions=2), nullable=False)
-    status = Column(String, default="waiting", nullable=False) # waiting, gaming, finish
+    status = Column(String, default="waiting", nullable=False) # waiting, active, finish
     type = Column(String, nullable=False) # с человеком - HUMAN, с компьютером - AI
     step_player = Column(String, nullable=True) # следующий ход игрока
     player_1_uuid = Column(String, nullable=True)   # UUID игрока за X

@@ -8,7 +8,7 @@ class GameService(ABC):
         pass
 
     @abstractmethod
-    def validate_game(self, game: CurrentGame) -> bool:
+    def validate_game(self, current_game: CurrentGame, old_game: CurrentGame) -> bool:
         pass
 
     @abstractmethod

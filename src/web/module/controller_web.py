@@ -15,15 +15,13 @@ class ControllerWeb:
         domain_game = WebMapper.web_to_domain(game_web)
         if game_web.type == "AI":
             updated_game = self.game_service.get_next_step(domain_game) # объект domain слоя CurrentGame
-            game_web_result = WebMapper.to_web(updated_game)
+            game_web_result = WebMapper.domain_to_web(updated_game)
         else:
             self.game_service.save_game(domain_game)
-            game_web_result = WebMapper.datasource_to_web(self.game_service.get_game(game_web.uuid))
-
+            game_web_result = WebMapper.domain_to_web(self.game_service.get_game(game_web.uuid))
         return game_web_result
 
     def download_game(self, game_uuid) -> GameWebDTO:
 
         downloaded_game = self.game_service.get_game(game_uuid)
-
-        return WebMapper.datasource_to_web(downloaded_game)
+        return WebMapper.domain_to_web(downloaded_game)

@@ -82,11 +82,11 @@ curl -X POST http://localhost:5000/make_move \
   -d '{
   "game_type" : "AI",
   "field": [
-    ["O", " ", "O"],
+    [" ", " ", " "],
     [" ", "X", " "],
-    [" ", "O", "X"]
+    [" ", " ", " "]
     ],
-    "uuid_game": "38879a95-710e-4105-b815-c608f8048d1f"
+    "uuid_game": "ce0f5bd6-5086-4803-b2f4-e50bec757c9d"
 }'
 
 

@@ -7,7 +7,6 @@ class CurrentGame:
 
     def __init__(self, uuid=None):
         self.field = GameField()
-        # self.UUID = uuid.uuid4()
         self.uuid = str(uuid4()) if not uuid else uuid
         # self.user_info = User()
         self.status = None

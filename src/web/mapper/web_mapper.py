@@ -55,8 +55,8 @@ class WebMapper:
         game_web = GameWebDTO()
 
         game_web.uuid = game_domain.uuid
-        game_web.field = game_domain.field.field
-        game_web.status = game_domain.status  # waiting, game
+        game_web.field.field = game_domain.field.field
+        game_web.status = game_domain.status
         game_web.type = game_domain.type
         game_web.step_player = game_domain.step_player  # следующий ход игрока
         game_web.player_1_uuid = game_domain.player_1_uuid  # UUID игрока за X
@@ -65,7 +65,6 @@ class WebMapper:
         game_web.player_2_sign = game_domain.player_2_sign
         game_web.draw = game_domain.draw  # ничья
         game_web.winner = game_domain.winner
-
         return game_web
 
     @staticmethod

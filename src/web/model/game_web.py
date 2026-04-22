@@ -18,14 +18,14 @@ class GameWebDTO:
 
 
     def set_uuid_player(self, uuid: str):
-        self.player_uuid = uuid
+        self.player_1_uuid = uuid
 
     def set_game_type(self, game_type: str):
         if game_type == "AI":
             self.type = game_type
             self.player_2_uuid = "computer"
-            self.step_player = self.player_uuid
+            self.step_player = self.player_1_uuid
 
         if game_type == "HUMAN":
             self.type = game_type
-            self.step_player = self.player_uuid
+            self.step_player = self.player_1_uuid

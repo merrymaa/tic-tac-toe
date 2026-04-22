@@ -16,9 +16,9 @@ def create_game(user_uuid):
     game_type = data['game_type']
 
     new_game = GameWebDTO()
-    print(new_game.uuid)
     new_game.set_uuid_player(user_uuid)
     new_game.set_game_type(game_type)
+
 
     container.game_service.add_game(WebMapper.web_to_domain(new_game))
 
@@ -92,10 +92,10 @@ def make_move(user_uuid):
         game_web = controller.download_game(uuid_game)
         game_web.field.field = field
         game_web = controller.make_move(game_web)
-
-        return jsonify({'field': game_web.field,
+        return jsonify({'field': game_web.field.field,
                         'game_id': str(game_web.uuid),
-                        'message': 'Game changed'})
+                        'status': game_web.status
+                        })
 
     except Exception as e:
         print(f"Ошибка_3: {e}")
