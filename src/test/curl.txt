@@ -47,8 +47,16 @@ curl -X GET http://localhost:5000/get_games \
   "game_type" : "HUMAN"
 }'
 
+запрос на получение определенной игры:
+curl -X GET http://localhost:5000/get_current_game \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "game_uuid" : "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
+}'
 
-# сделать ход
+
+# сделать ход - игрок 1
 curl -X POST http://localhost:5000/make_move \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
@@ -58,7 +66,20 @@ curl -X POST http://localhost:5000/make_move \
     [" ", " ", " "],
     [" ", "X", " "]
     ],
-    "uuid_game": "3d0d01c4-ca64-4f70-aedf-73125c917f8b"
+    "uuid_game": "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
+}'
+
+# сделать ход - игрок 2
+curl -X POST http://localhost:5000/make_move \
+  -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "field": [
+    [" ", " ", " "],
+    [" ", "O", " "],
+    [" ", "X", " "]
+    ],
+    "uuid_game": "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
 }'
 
 
@@ -95,5 +116,11 @@ curl -X POST http://localhost:5000/make_move \
     ],
     "uuid_game": "ce0f5bd6-5086-4803-b2f4-e50bec757c9d"
 }'
+
+
+запрос на получение информации об игроке:
+curl -X GET http://localhost:5000/get_user \
+  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
+  -H "Content-Type: application/json"
 
 

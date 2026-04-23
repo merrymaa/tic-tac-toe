@@ -10,7 +10,7 @@ class ControllerWeb:
     def __init__(self, game_service: RepositoryBackedService):
         self.game_service = game_service
 
-    def make_move(self, game_web: GameWebDTO) -> GameWebDTO:
+    def make_move(self, game_web: GameWebDTO, player_uuid: str) -> GameWebDTO:
 
         domain_game = WebMapper.web_to_domain(game_web)
         if game_web.type == "AI":
@@ -18,7 +18,7 @@ class ControllerWeb:
             game_web_result = WebMapper.domain_to_web(updated_game)
         else:
             print("=======Step done")
-            updated_game = self.game_service.make_step(domain_game)
+            updated_game = self.game_service.make_step(domain_game, player_uuid)
             # self.game_service.save_game(domain_game)
             game_web_result = WebMapper.domain_to_web(updated_game)
         return game_web_result
@@ -28,6 +28,9 @@ class ControllerWeb:
         downloaded_game = self.game_service.get_game(game_uuid)
         return WebMapper.domain_to_web(downloaded_game)
 
-    def join_game(self, player_uuid: str) -> GameWebDTO:
+    def join_game(self, player_uuid: str) -> GameWebDTO | None:
+
         joined_game = self.game_service.join_game(player_uuid)
-        return WebMapper.domain_to_web(joined_game)
+        if joined_game:
+            return WebMapper.domain_to_web(joined_game)
+        return None

@@ -1,4 +1,4 @@
-from datasource.database.database import Games, SessionLocal
+from datasource.database.database import Games, SessionLocal, User
 from datasource.repository.game_repository_interface import GameRepository
 from domain.model.game import CurrentGame
 from datasource.mapper.mapper import Mapper
@@ -56,11 +56,23 @@ class GameRepositoryImpl(GameRepository):
             ).all()
             return active_games
 
+    def get_current_game(self, game_uuid: str) -> Games:
+        with self.session_factory() as session:
+            current_game = session.query(Games).filter(Games.uuid == game_uuid).first()
+            return current_game
+
+    def get_user(self, user_uuid) -> User:
+        with self.session_factory() as session:
+            current_user = session.query(User).filter(User.uuid == user_uuid).first()
+            return current_user
+
+
     def get_available_games(self, player_uuid: str) -> list[Games]:
         """"Возвращает игры доступные для присоединения игроку player_uuid"""
         with self.session_factory() as session:
             available_games = session.query(Games).filter(Games.status == "waiting", Games.type == "HUMAN",
-                                                          Games.player_2_uuid.is_(None), Games.player_1_uuid != player_uuid).all()
+                                                          Games.player_2_uuid.is_(None),
+                                                          Games.player_1_uuid != player_uuid).all()
             return available_games
 
     def get_game(self, game_uuid: str) -> CurrentGame:
@@ -73,13 +85,10 @@ class GameRepositoryImpl(GameRepository):
             current_game.status = game.status
             current_game.type = game.type
             current_game.step_player = game.step_player
-            current_game.player_1_uuid =game.player_1_uuid
+            current_game.player_1_uuid = game.player_1_uuid
             current_game.player_2_uuid = game.player_2_uuid
             current_game.player_1_sign = game.player_1_sign
             current_game.player_2_sign = game.player_2_sign
-            current_game.draw =game.draw
+            current_game.draw = game.draw
             current_game.winner = game.winner
         return current_game
-
-
-

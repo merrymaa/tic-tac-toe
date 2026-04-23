@@ -15,20 +15,18 @@ class RepositoryBackedService(GameService):
         self.game_repository = GameRepositoryImpl()
         self.game_service = GameServiceMinimax()
 
-    def make_step(self, game: CurrentGame) -> CurrentGame:
+    def make_step(self, game: CurrentGame, player_uuid: str) -> CurrentGame:
         """"Ход игры с человеком"""
         old_game = self.get_game(game.uuid)
-        if self.validate_game(game, old_game):
-            print("====Game is valid")
+        if self.validate_game(game, old_game) and self.game_service.make_step(game, player_uuid):
+            #  обработка хода с проверкой очередности
             if self.is_game_over(game):
                 game.status = "finish"
                 game.set_game_over()
-
+            # сохранение после хода
             self.game_repository.save_game(game)
-
         return game
 
-        pass
     def get_next_step(self, game: CurrentGame) -> CurrentGame:
         """"Ход игры с компьютером"""
         old_game = self.get_game(game.uuid)
@@ -68,14 +66,21 @@ class RepositoryBackedService(GameService):
     def get_game(self, game_uuid: str) -> CurrentGame:
         return self.game_repository.get_game(game_uuid)
 
+    def get_current_game(self, game_uuid: str) -> Games:
+        return self.game_repository.get_current_game(game_uuid)
+
     def get_available_games(self, player_uuid: str) -> list[Games]:
         return self.game_repository.get_available_games(player_uuid)
 
-    def join_game(self, player_uuid: str) -> CurrentGame:
+    def join_game(self, player_uuid: str) -> CurrentGame | None:
 
         game_for_join = self.get_available_games(player_uuid)
-        game = Mapper.datasource_to_domain(game_for_join[1])
-        joined_game = self.game_service.join_game(player_uuid, game)
-        self.save_game(joined_game)
+        if game_for_join:
+            game = Mapper.datasource_to_domain(game_for_join[1])
+            joined_game = self.game_service.join_game(player_uuid, game)
+            self.save_game(joined_game)
+            return joined_game
+        return None
 
-        return joined_game
+    def get_user(self, user_uuid) -> User:
+        return self.game_repository.get_user(user_uuid)

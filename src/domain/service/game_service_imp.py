@@ -90,9 +90,33 @@ class GameServiceMinimax(GameService):
     def is_game_over(self, game: CurrentGame) -> bool:
         return self.check_win(game.field.field, HUMAN) or self.check_win(game.field.field, AI)
 
-    def join_game(self, player_uuid: str, game: CurrentGame) -> CurrentGame:
+    @staticmethod
+    def join_game(player_uuid: str, game: CurrentGame) -> CurrentGame:
 
         game.player_2_uuid = player_uuid
         game.status = "active"
 
         return game
+
+    def make_step(self, game: CurrentGame, player_uuid: str) -> bool:
+        # ход игрока 1
+        if game.step_player == game.player_1_uuid == player_uuid:
+            game.step_player = game.player_2_uuid
+            return True
+
+        # ход игрока 2
+        if game.step_player == game.player_2_uuid == player_uuid:
+            game.step_player = game.player_1_uuid
+            return True
+
+        return False
+
+
+
+
+
+        pass
+
+
+
+
