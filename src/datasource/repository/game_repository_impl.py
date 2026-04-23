@@ -13,7 +13,6 @@ class GameRepositoryImpl(GameRepository):
         with self.session_factory() as session:
             db_game = session.query(Games).filter(Games.uuid == game.uuid).first()
             if db_game:
-                # Обновляем поля
                 db_game.field = game.field.field
                 db_game.status = game.status
                 db_game.type = game.type
@@ -49,13 +48,20 @@ class GameRepositoryImpl(GameRepository):
         session_db.commit()
         session_db.close()
 
-    def get_active_games(self) -> list:
+    def get_active_games(self) -> list[Games]:
         with self.session_factory() as session:
             active_games = session.query(Games).filter(
                 Games.winner.is_(None),
                 Games.draw.is_(None)
             ).all()
             return active_games
+
+    def get_available_games(self, player_uuid: str) -> list[Games]:
+        """"Возвращает игры доступные для присоединения игроку player_uuid"""
+        with self.session_factory() as session:
+            available_games = session.query(Games).filter(Games.status == "waiting", Games.type == "HUMAN",
+                                                          Games.player_2_uuid.is_(None), Games.player_1_uuid != player_uuid).all()
+            return available_games
 
     def get_game(self, game_uuid: str) -> CurrentGame:
         with self.session_factory() as session:

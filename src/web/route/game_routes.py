@@ -1,3 +1,5 @@
+from zoneinfo import available_timezones
+
 from flask import Blueprint, jsonify, request
 from di.container import container
 from web.module.controller_web import ControllerWeb
@@ -32,43 +34,13 @@ def create_game(user_uuid):
 @UserAuthenticator.protected
 def get_games(user_uuid):
     """"Создание новой игры: с человеком или с компьютером"""
-    games = container.user_bd_service.get_active_games()
+    games = container.game_service.get_active_games()
     all_games = []
 
     for game in games:
         all_games.append(game.uuid)
 
     return jsonify({f'query from user {user_uuid}, all active games': all_games})
-
-
-# @game_bp.route('/<user_name>')
-# @UserAuthenticator.protected
-# def new_game(user_name):
-#     game = CurrentGame()
-#     game.set_user_name(user_name)
-#
-#     game.user_info.hashed_password = "tratata"  # NB!!!!
-#     # container.game_service.repository.save(game)
-#     container.user_repository.save(game.user_info)
-#
-#     return jsonify({
-#         'message': 'New Game created',
-#         'user_name': user_name,
-#         'game_id': str(game.UUID),
-#         'field': game.field.field
-#     })
-
-
-# @game_bp.route('/get_game/<game_id>')
-# def get_game(game_id):
-#     game_uuid = UUID(game_id)
-#
-#     game = container.game_service.repository.get(game_uuid)
-#
-#     return jsonify({'field': game.field.field,
-#                     'game_id': str(game.UUID),
-#                     'message': 'Game loaded'})
-
 
 @game_bp.route('/make_move', methods=['POST'])
 @UserAuthenticator.protected
@@ -102,3 +74,12 @@ def make_move(user_uuid):
         import traceback
         traceback.print_exc()
         return jsonify({'error_4': str(e)}), 500
+
+@game_bp.route('/join', methods=['POST'])
+@UserAuthenticator.protected
+def join_game(user_uuid):
+
+    controller = ControllerWeb(container.game_service)
+    joined_game = controller.join_game(user_uuid)
+
+    return jsonify({"joined game": joined_game.uuid})

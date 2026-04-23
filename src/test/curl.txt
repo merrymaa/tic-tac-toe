@@ -10,13 +10,14 @@ curl -X POST http://localhost:5000/register \
 echo -n "evg:pa3453454" | base64
 ZXZnOnBhMzQ1MzQ1NA==
 
-$ echo -n "evg_2:pa3453454" | base64
-ZXZnXzI6cGEzNDUzNDU0
+$ echo -n "gamer:pa3453454" | base64
+Z2FtZXI6cGEzNDUzNDU0
+
 
 
 запрос на авторизацию пользователя (пользователь существует):
 curl -X POST http://localhost:5000/authorize \
-   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA=="
+   -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0"
 
 запрос на авторизацию пользователя (пользователь не существует):
 curl -X POST http://localhost:5000/authorize \
@@ -52,14 +53,20 @@ curl -X POST http://localhost:5000/make_move \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
   -d '{
-  "game_type" : "AI",
-  "field": [
+    "field": [
     [" ", " ", " "],
     [" ", " ", " "],
     [" ", "X", " "]
     ],
-    "uuid_game": "906cf540-6890-49b2-b8ec-19df634abdc9"
+    "uuid_game": "3d0d01c4-ca64-4f70-aedf-73125c917f8b"
 }'
+
+
+# запрос на присоединение к игре
+curl -X POST http://localhost:5000/join \
+  -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0" \
+  -H "Content-Type: application/json"
+
 
 curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
   -H "Content-Type: application/json" \

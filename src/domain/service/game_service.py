@@ -14,3 +14,7 @@ class GameService(ABC):
     @abstractmethod
     def is_game_over(self, game: CurrentGame) -> bool:
         pass
+
+    # @abstractmethod
+    # def join_game(self, player_uuid: str, game: CurrentGame) -> CurrentGame:
+    #     pass

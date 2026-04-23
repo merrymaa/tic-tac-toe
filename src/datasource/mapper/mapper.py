@@ -13,6 +13,25 @@ class Mapper:
 
     Преобразует модели DTO между собой
     """
+    @staticmethod
+    def datasource_to_domain(datasource_dto: Games) -> CurrentGame:
+        game_domain = CurrentGame()
+
+
+        game_domain.uuid = datasource_dto.uuid
+        game_domain.field.field = datasource_dto.field
+        game_domain.status = datasource_dto.status  # waiting, game
+        game_domain.type = datasource_dto.type
+        game_domain.step_player = datasource_dto.step_player  # следующий ход игрока
+        game_domain.player_1_uuid = datasource_dto.player_1_uuid  # UUID игрока за X
+        game_domain.player_2_uuid = datasource_dto.player_2_uuid  # UUID игрока за O (для компьютера = "computer")
+        game_domain.player_1_sign = datasource_dto.player_1_sign
+        game_domain.player_2_sign = datasource_dto.player_2_sign
+        game_domain.draw = datasource_dto.draw  # ничья
+        game_domain.winner = datasource_dto.winner
+
+        return game_domain
+
 
     @staticmethod
     def domain_to_datasource(game: CurrentGame) -> Games:
