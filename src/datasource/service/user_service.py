@@ -6,3 +6,7 @@ class UserService(ABC):
     @abstractmethod
     def register(self, sign_up_request: SignUpRequest) -> bool:
         pass
+
+    @abstractmethod
+    def authorize(self, login: str, password: str) -> str | None:
+        pass

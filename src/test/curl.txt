@@ -1,12 +1,12 @@
-запрос на регистрацию нового пользователя:
+==== запрос на регистрацию нового пользователя:
 curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
-  "login": "evg",
+  "login": "valli",
   "password": "pa3453454"
 }'
 
-преобразование пары логин:пароль в формат base64:
+==== преобразование пары логин:пароль в формат base64:
 echo -n "evg:pa3453454" | base64
 ZXZnOnBhMzQ1MzQ1NA==
 
@@ -14,16 +14,15 @@ $ echo -n "gamer:pa3453454" | base64
 Z2FtZXI6cGEzNDUzNDU0
 
 
-
-запрос на авторизацию пользователя (пользователь существует):
+==== запрос на авторизацию пользователя (пользователь существует):
 curl -X POST http://localhost:5000/authorize \
    -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0"
 
-запрос на авторизацию пользователя (пользователь не существует):
+==== запрос на авторизацию пользователя (пользователь не существует):
 curl -X POST http://localhost:5000/authorize \
    -H "Authorization: Basic ZXZnXzI6cGEzNDUzNDU0"
 
-запрос на создание новой игры (с компьютером):
+==== запрос на создание новой игры (с компьютером):
 curl -X POST http://localhost:5000/new_game \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
@@ -31,7 +30,7 @@ curl -X POST http://localhost:5000/new_game \
   "game_type" : "AI"
 }'
 
-запрос на создание новой игры (с человеком):
+==== запрос на создание новой игры (с человеком):
 curl -X POST http://localhost:5000/new_game \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
@@ -39,15 +38,13 @@ curl -X POST http://localhost:5000/new_game \
   "game_type" : "HUMAN"
 }'
 
-запрос на получение всех активных игр:
+==== запрос на получение всех активных игр:
 curl -X GET http://localhost:5000/get_games \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "game_type" : "HUMAN"
-}'
+  -H "Content-Type: application/json"
 
-запрос на получение определенной игры:
+
+==== запрос на получение определенной игры:
 curl -X GET http://localhost:5000/get_current_game \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
@@ -55,8 +52,14 @@ curl -X GET http://localhost:5000/get_current_game \
   "game_uuid" : "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
 }'
 
+==== запрос на присоединение к игре
+curl -X POST http://localhost:5000/join \
+  -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0" \
+  -H "Content-Type: application/json"
 
-# сделать ход - игрок 1
+
+
+==== сделать ход - игрок 1
 curl -X POST http://localhost:5000/make_move \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json" \
@@ -66,10 +69,10 @@ curl -X POST http://localhost:5000/make_move \
     [" ", " ", " "],
     [" ", "X", " "]
     ],
-    "uuid_game": "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
+    "uuid_game": "8356bf54-9574-4a28-8b27-5d0c65ac135d"
 }'
 
-# сделать ход - игрок 2
+==== сделать ход - игрок 2
 curl -X POST http://localhost:5000/make_move \
   -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0" \
   -H "Content-Type: application/json" \
@@ -77,48 +80,15 @@ curl -X POST http://localhost:5000/make_move \
     "field": [
     [" ", " ", " "],
     [" ", "O", " "],
-    [" ", "X", " "]
-    ],
-    "uuid_game": "8e1f3ec8-9a45-4a02-b294-8b02a1db6e02"
-}'
-
-
-# запрос на присоединение к игре
-curl -X POST http://localhost:5000/join \
-  -H "Authorization: Basic Z2FtZXI6cGEzNDUzNDU0" \
-  -H "Content-Type: application/json"
-
-
-curl -X POST http://localhost:5000/make_move/ea6ff0e9-a483-4178-8277-0b416177cec6 \
-  -H "Content-Type: application/json" \
-  -d '{
-  "game_type" : "AI",
-  "game_status" : "start"
-  "game_id": "ea6ff0e9-a483-4178-8277-0b416177cec6",
-  "field": [
-    [" ", " ", " "],
-    [" ", " ", " "],
-    [" ", "X", " "]
-  ]
-}'
-
-
-
-curl -X POST http://localhost:5000/make_move \
-  -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "game_type" : "AI",
-  "field": [
-    [" ", " ", " "],
-    [" ", "X", " "],
     [" ", " ", " "]
     ],
-    "uuid_game": "ce0f5bd6-5086-4803-b2f4-e50bec757c9d"
+    "uuid_game": "8356bf54-9574-4a28-8b27-5d0c65ac135d"
 }'
 
 
-запрос на получение информации об игроке:
+
+
+==== запрос на получение информации об игроке:
 curl -X GET http://localhost:5000/get_user \
   -H "Authorization: Basic ZXZnOnBhMzQ1MzQ1NA==" \
   -H "Content-Type: application/json"

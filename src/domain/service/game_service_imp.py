@@ -72,7 +72,28 @@ class GameServiceMinimax(GameService):
                 if old_field[i][j] == HUMAN or old_field[i][j] == AI:
                     if current_field[i][j] != old_field[i][j]:
                         return False
+        changes = 0 # количество изменений
+        sign = None # Знак которым осуществлен ход
+        for i in range(SIZE_FIELD):
+            for j in range(SIZE_FIELD):
+                if current_field[i][j] != old_field[i][j]:
+                    changes += 1
+                    sign = current_field[i][j]
+        print(f"=== sign = {sign}")
+        if old_game.step_player == old_game.player_1_uuid:
+            print(f"===sign player: {old_game.player_1_sign} - {sign}")
+            if old_game.player_1_sign != sign:
+                return False
+        if old_game.step_player == old_game.player_2_uuid:
+            print(f"===sign player: {old_game.player_2_sign} - {sign}")
+            if old_game.player_2_sign != sign:
+                return False
+        print(f"==chamges = {changes}")
+        if changes != 1:
+            return False
         return True
+
+
 
 
     @staticmethod
@@ -97,8 +118,8 @@ class GameServiceMinimax(GameService):
         game.status = "active"
 
         return game
-
-    def make_step(self, game: CurrentGame, player_uuid: str) -> bool:
+    @staticmethod
+    def change_step(game: CurrentGame, player_uuid: str) -> bool:
         # ход игрока 1
         if game.step_player == game.player_1_uuid == player_uuid:
             game.step_player = game.player_2_uuid
@@ -108,15 +129,23 @@ class GameServiceMinimax(GameService):
         if game.step_player == game.player_2_uuid == player_uuid:
             game.step_player = game.player_1_uuid
             return True
-
+        print(f"=== нарушен порядок хода")
         return False
 
+    @staticmethod
+    def create_game(player_uuid: str, game_type: str) -> CurrentGame | None:
+        try:
+            if game_type != "HUMAN" and game_type != "AI":
+                raise ValueError
 
+            new_game = CurrentGame()
+            new_game.player_1_uuid = player_uuid
+            new_game.step_player = player_uuid
+            new_game.status = "waiting"
+            new_game.type = game_type
+            if game_type == "AI":
+                new_game.player_2_uuid = "computer"
 
-
-
-        pass
-
-
-
-
+            return new_game
+        except Exception as e:
+            print(f"Error in game_type: {e}")

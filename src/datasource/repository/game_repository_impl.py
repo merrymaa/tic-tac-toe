@@ -10,6 +10,8 @@ class GameRepositoryImpl(GameRepository):
         self.session_factory = session_factory
 
     def save_game(self, game: CurrentGame) -> None:
+        print("===game save")
+        print(f"====field = {game.field.field}")
         with self.session_factory() as session:
             db_game = session.query(Games).filter(Games.uuid == game.uuid).first()
             if db_game:

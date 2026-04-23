@@ -1,7 +1,7 @@
 import datasource
 from domain.model.game import CurrentGame
 from datasource.database.database import Games
-from datasource.model.game_dto import GameDTO
+# from datasource.model.game_dto import GameDTO
 from web.model.game_web import GameWebDTO
 
 

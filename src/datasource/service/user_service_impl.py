@@ -16,8 +16,7 @@ class UserServiceImpl(UserService):
     def authorize(self, login: str, password: str) -> str | None:
         user = self.user_rep.find_by_login(login)
         if user and check_password_hash(user.hashed_password, password):
-            print("authoris was successful ")
+            print("Authorization is successful")
             return user.uuid
 
         return None
-

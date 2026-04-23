@@ -1,6 +1,6 @@
 from uuid import uuid4
 from domain.model.game_field import GameField
-from datasource.model.user import User
+
 
 
 class CurrentGame:
@@ -8,7 +8,6 @@ class CurrentGame:
     def __init__(self, uuid=None):
         self.field = GameField()
         self.uuid = str(uuid4()) if not uuid else uuid
-        # self.user_info = User()
         self.status = None
         self.type = None
         self.step_player = None

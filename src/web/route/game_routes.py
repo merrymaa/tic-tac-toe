@@ -2,6 +2,7 @@ from zoneinfo import available_timezones
 
 from flask import Blueprint, jsonify, request
 from di.container import container
+from web.module import controller_web
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
 from web.model.game_web import GameWebDTO
@@ -22,10 +23,16 @@ def create_game(user_uuid):
         new_game = GameWebDTO()
         new_game.set_uuid_player(user_uuid)
         new_game.set_game_type(game_type)
-        container.game_service.add_game(WebMapper.web_to_domain(new_game))
+
+        controller = ControllerWeb(container.game_service)
+        new_game = controller.create_game(new_game)
+        if not new_game:
+            return jsonify({'error': 'Cant create new game'}), 400
+
+        # container.game_service.add_game(WebMapper.web_to_domain(new_game))
 
         return jsonify({
-            'message': 'Game created',
+            'status': new_game.status,
             'game_id': new_game.uuid
         })
     except Exception as e:
@@ -46,7 +53,7 @@ def get_games(user_uuid):
 
         return jsonify({f'query from user {user_uuid}, all active games': all_games})
     except Exception as e:
-        logger.error(f"Error in get_games: {e}")
+        print(f"Error in get_games: {e}")
         return jsonify({'error': 'Internal server error while fetching games'}), 500
 
 
@@ -63,7 +70,7 @@ def get_current_game(user_uuid):
         if game is None:
             return jsonify({'error': 'Game not found'}), 404
         return jsonify({
-            'curent game:': game.uuid,
+            'current game:': game.uuid,
             'field:': game.field,
             'status:': game.status,
             'type:': game.type,
@@ -71,7 +78,7 @@ def get_current_game(user_uuid):
             'winner': game.winner
         })
     except Exception as e:
-        logger.error(f"Error in get_current_game: {e}")
+        print(f"Error in get_current_game: {e}")
         return jsonify({'error': 'Internal server error while fetching current games'}), 500
 
 @game_bp.route('/make_move', methods=['POST'])
@@ -94,10 +101,10 @@ def make_move(user_uuid):
             return jsonify({'error': 'Missing field or uuid_game in request'}), 400
         controller = ControllerWeb(container.game_service)
         game_web = controller.download_game(uuid_game)
+        game_web.field.field = field
         game_web = controller.make_move(game_web, user_uuid)
         if game_web is None:
-            return jsonify({'error': 'Game not found'}), 404
-        game_web.field.field = field
+            return jsonify({'error': 'Game not found or not valid field'}), 404
         return jsonify({'field': game_web.field.field,
                         'game_id': str(game_web.uuid),
                         'status': game_web.status
@@ -116,12 +123,14 @@ def join_game(user_uuid):
     try:
         controller = ControllerWeb(container.game_service)
         joined_game = controller.join_game(user_uuid)
+        print(f"===joined game = {joined_game}")
         if joined_game:
-            return jsonify({"joined game": joined_game.uuid})
-        return jsonify({"Games for join": "None"})
+            return jsonify({"player": user_uuid, "joined to game": joined_game.uuid})
+        else:
+            return jsonify({"message": "No available games to join"}), 404
     except Exception as e:
         print(f"Error in join game: {e}")
-        return jsonify({'error': 'Internal server error while joining game'}), 500
+        return jsonify({'Error': 'Internal server error while joining game'}), 500
 
 
 @game_bp.route('/get_user')
