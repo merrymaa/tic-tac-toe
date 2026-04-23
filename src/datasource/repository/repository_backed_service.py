@@ -28,11 +28,12 @@ class RepositoryBackedService(GameService):
         """"Ход игры с человеком"""
         try:
             old_game = self.get_game(game.uuid)
-            if self.validate_game(game, old_game) and self.game_service.change_step(game, player_uuid):
+            if self.validate_game(game, old_game) and self.game_service.check_step(game, player_uuid):
                 if self.is_game_over(game):
                     game.status = "finish"
                     game.set_game_over()
                 # сохранение после хода
+                self.game_service.change_step(game, player_uuid)
                 self.game_repository.save_game(game)
                 return game
             else:

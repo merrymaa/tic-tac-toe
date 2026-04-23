@@ -64,6 +64,8 @@ class GameServiceMinimax(GameService):
 
     def validate_game(self, current_game: CurrentGame, old_game: CurrentGame) -> bool:
         """Функция проверяет неизменность предыдущих ходов"""
+        if current_game.status == "finish":
+            return False
         current_field = current_game.field.field
         old_field = old_game.field.field
 
@@ -119,18 +121,32 @@ class GameServiceMinimax(GameService):
 
         return game
     @staticmethod
-    def change_step(game: CurrentGame, player_uuid: str) -> bool:
+    def check_step(game: CurrentGame, player_uuid: str) -> bool:
+        return game.step_player == player_uuid
+
+        # # ход игрока 1
+        # if game.step_player == game.player_1_uuid == player_uuid:
+        #     game.step_player = game.player_2_uuid
+        #     return True
+        #
+        # # ход игрока 2
+        # if game.step_player == game.player_2_uuid == player_uuid:
+        #     game.step_player = game.player_1_uuid
+        #     return True
+        # print(f"=== нарушен порядок хода")
+        # return False
+
+    @staticmethod
+    def change_step(game: CurrentGame, player_uuid: str) -> None:
         # ход игрока 1
         if game.step_player == game.player_1_uuid == player_uuid:
             game.step_player = game.player_2_uuid
-            return True
+            print("===== 1 -> 2")
 
         # ход игрока 2
         if game.step_player == game.player_2_uuid == player_uuid:
             game.step_player = game.player_1_uuid
-            return True
-        print(f"=== нарушен порядок хода")
-        return False
+            print("===== 2 -> 1")
 
     @staticmethod
     def create_game(player_uuid: str, game_type: str) -> CurrentGame | None:
