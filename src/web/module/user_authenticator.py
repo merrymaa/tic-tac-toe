@@ -13,23 +13,27 @@ class UserAuthenticator:
             decoded = base64.b64decode(encoded).decode('utf-8')
             login, password = decoded.split(':', 1)
             return login, password
-        except Exception:
+        except Exception as e:
+            print(f"Error in UserAuthenticator.decode_base - {e}")
             return None, None
 
     @staticmethod
     def protected(route_function):
         @wraps(route_function)
         def wrapper(*args, **kwargs):
-            auth_header = request.headers.get('Authorization')
-            login, password = UserAuthenticator.decode_base(auth_header)
-            if not login or not password:
-                return jsonify({"error": "Missing or invalid Authorization header"}), 401
+            try:
+                auth_header = request.headers.get('Authorization')
+                login, password = UserAuthenticator.decode_base(auth_header)
+                if not login or not password:
+                    return jsonify({"error": "Missing or invalid Authorization header"}), 401
 
-            user_uuid = container.user_service.authorize(login, password)
-            if user_uuid is None:
-                return jsonify({"error": "Invalid credentials"}), 401
+                user_uuid = container.user_service.authorize(login, password)
+                if user_uuid is None:
+                    return jsonify({"error": "Invalid credentials"}), 401
 
-            kwargs['user_uuid'] = user_uuid
-            return route_function(*args, **kwargs)
-            # return route_function()
+                kwargs['user_uuid'] = user_uuid
+                return route_function(*args, **kwargs)
+            except Exception as e:
+                print(f"Error in decorate authentication - {e}")
+                return jsonify({"error": "Internal server error during authentication"}), 500
         return wrapper

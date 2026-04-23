@@ -16,32 +16,41 @@ def decode_base(header: str):
         decoded = base64.b64decode(encoded).decode('utf-8')
         login, password = decoded.split(':', 1)
         return login, password
-    except Exception:
+    except Exception as e:
+        print(f"Error decode Basic Auth: {e}")
         return None, None
 
 
 @auth_bp.route('/register', methods=['POST'])
 @validate_body(SignUpRequest)
 def register_user():
-    validated_request = get_valid_request()
-    success = container.user_service.register(validated_request.body)
-    if success:
-        return {"message": f"{validated_request.body.login} was successful registered"}, 201
-    else:
-        return {"error": "Login exists"}, 409
+    try:
+        validated_request = get_valid_request()
+        success = container.user_service.register(validated_request.body)
+        if success:
+            return {"message": f"{validated_request.body.login} was successful registered"}, 201
+        else:
+            return {"error": "Login exists"}, 409
+    except Exception as e:
+        print(f"Error in registration user: {e}")
+        return {"error": "Internal server error during registration"}, 500
 
 
 @auth_bp.route('/authorize', methods=['POST'])
 def authorize_user():
-    auth_header = request.headers.get('Authorization')
-    login, password = decode_base(auth_header)
-    if not login or not password:
-        return jsonify({"error": "Invalid or missing Basic Auth header"}), 401
+    try:
+        auth_header = request.headers.get('Authorization')
+        login, password = decode_base(auth_header)
+        if not login or not password:
+            return jsonify({"error": "Invalid or missing Basic Auth header"}), 401
 
-    user_uuid = container.user_service.authorize(login, password)
-    if user_uuid is None:
-        return jsonify({"error": "Authorization not success"}), 401
-    return jsonify({"user_uuid": user_uuid}), 200
+        user_uuid = container.user_service.authorize(login, password)
+        if user_uuid is None:
+            return jsonify({"error": "Authorization not success"}), 401
+        return jsonify({"user_uuid": user_uuid}), 200
+    except Exception as e:
+        print(f"Error in authorization: {e}")
+        return jsonify({"error": "Internal server error during authorization"}), 500
 
 
 
