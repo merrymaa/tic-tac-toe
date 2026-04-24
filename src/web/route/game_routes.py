@@ -25,8 +25,6 @@ def create_game(user_uuid):
         if not new_game:
             return jsonify({'error': 'Cant create new game'}), 400
 
-        # container.game_service.add_game(WebMapper.web_to_domain(new_game))
-
         return jsonify({
             'status': new_game.status,
             'game_id': new_game.uuid

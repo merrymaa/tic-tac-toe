@@ -2,8 +2,6 @@ from sqlalchemy import create_engine, String, Column, ARRAY
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
 
-# from sqlalchemy.exc import OperationalError
-
 DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/game_db"
 engine = create_engine(DATABASE_URL, echo=False)
 

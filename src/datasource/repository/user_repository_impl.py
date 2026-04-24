@@ -43,3 +43,8 @@ class UserRepositoryImpl(UserRepository):
 
         finally:
             session_db.close()
+
+    def get_user(self, user_uuid) -> User:
+        with self.session_factory() as session:
+            current_user = session.query(User).filter(User.uuid == user_uuid).first()
+            return current_user
