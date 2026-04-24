@@ -8,7 +8,6 @@ class UserRepositoryImpl(UserRepository):
     def __init__(self, session_factory=SessionLocal):
         self.session_factory = session_factory
 
-
     def save(self, user: User):
         session_db = self.session_factory()
         new_user = User(uuid=user.uuid, login=user.login, hashed_password=user.hashed_password)
@@ -36,8 +35,6 @@ class UserRepositoryImpl(UserRepository):
         finally:
             session_db.close()
 
-
-
     def find_by_login(self, login: str) -> str:
         """"Ищет пользователя по логину и возвращает его UUID (str)"""
         session_db = self.session_factory()
@@ -46,4 +43,3 @@ class UserRepositoryImpl(UserRepository):
 
         finally:
             session_db.close()
-

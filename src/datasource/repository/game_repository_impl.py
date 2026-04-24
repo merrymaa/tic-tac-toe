@@ -2,7 +2,6 @@ from datasource.database.database import Games, SessionLocal, User
 from datasource.repository.game_repository_interface import GameRepository
 from domain.model.game import CurrentGame
 from datasource.mapper.mapper import Mapper
-from web.model.game_web import GameWebDTO
 
 
 class GameRepositoryImpl(GameRepository):
@@ -67,7 +66,6 @@ class GameRepositoryImpl(GameRepository):
         with self.session_factory() as session:
             current_user = session.query(User).filter(User.uuid == user_uuid).first()
             return current_user
-
 
     def get_available_games(self, player_uuid: str) -> list[Games]:
         """"Возвращает игры доступные для присоединения игроку player_uuid"""

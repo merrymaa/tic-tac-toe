@@ -11,6 +11,7 @@ class WebMapper:
     Преобразует объекты между собой
 
     """
+
     @staticmethod
     def datasource_to_web(datasource_dto) -> GameWebDTO:
         try:
@@ -56,9 +57,8 @@ class WebMapper:
             print(f"Error in web_to_domain - {e}")
             raise
 
-
     @staticmethod
-    def domain_to_web(game_domain: CurrentGame ) -> GameWebDTO:
+    def domain_to_web(game_domain: CurrentGame) -> GameWebDTO:
         try:
             game_web = GameWebDTO()
 
@@ -77,27 +77,3 @@ class WebMapper:
         except Exception as e:
             print(f"Error in domain_to_web - {e}")
             raise
-
-    # @staticmethod
-    # def to_web(game: CurrentGame) -> GameWebDTO:
-    #     """"Преобразование объекта домаин слоя Game в объект веб слоя GameWebDTO"""
-    #     game_web_dto = GameWebDTO(game.uuid, game.field.field)
-    #
-    #     return game_web_dto
-    #
-    # @staticmethod
-    # def to_domain(game_web_dto: GameWebDTO) -> CurrentGame:
-    #     """"Преобразование объекта веб слоя GameWebDTO в объект домаин слоя Game"""
-    #     game = CurrentGame()
-    #     game.UUID = game_web_dto.uuid
-    #     game.field.field = game_web_dto.field.field
-    #
-    #     return game
-    #
-    # @staticmethod
-    # def from_web_to_db(game_web: GameWebDTO) -> Games:
-    #     game_db = Games(uuid=game_web.uuid, field=game_web.field.field, player_1_uuid=game_web.player_uuid,
-    #                     type=game_web.game_type,
-    #                     step_player=game_web.step_next_player, player_2_uuid=game_web.player_2)
-    #
-    #     return game_db

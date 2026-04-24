@@ -1,12 +1,10 @@
 from datasource.mapper.mapper import Mapper
 from domain.service.game_service import GameService
 from datasource.repository.game_repository_impl import GameRepositoryImpl
-from datasource.repository.user_repository_impl import UserRepositoryImpl
 from domain.service.game_service_imp import GameServiceMinimax
 from domain.model.game import CurrentGame
 from datasource.database.database import Games
 from datasource.database.database import User
-from web.model.game_web import GameWebDTO
 
 
 class RepositoryBackedService(GameService):
@@ -43,7 +41,7 @@ class RepositoryBackedService(GameService):
             print(f"Step is not available: {e}")
             return None
 
-    def get_next_step(self, game: CurrentGame) -> CurrentGame:
+    def get_next_step(self, game: CurrentGame) -> CurrentGame | None:
         """"Ход игры с компьютером"""
         old_game = self.get_game(game.uuid)
         if self.validate_game(game, old_game):
@@ -60,8 +58,8 @@ class RepositoryBackedService(GameService):
                     game.status = "finish"
                     game.set_game_over()
                 self.game_repository.save_game(game)
-
-        return game
+            return game
+        return None
 
     def save_game(self, game: CurrentGame):
         self.game_repository.save_game(game)

@@ -74,29 +74,23 @@ class GameServiceMinimax(GameService):
                 if old_field[i][j] == HUMAN or old_field[i][j] == AI:
                     if current_field[i][j] != old_field[i][j]:
                         return False
-        changes = 0 # количество изменений
-        sign = None # Знак которым осуществлен ход
-        for i in range(SIZE_FIELD):
-            for j in range(SIZE_FIELD):
-                if current_field[i][j] != old_field[i][j]:
-                    changes += 1
-                    sign = current_field[i][j]
-        print(f"=== sign = {sign}")
-        if old_game.step_player == old_game.player_1_uuid:
-            print(f"===sign player: {old_game.player_1_sign} - {sign}")
-            if old_game.player_1_sign != sign:
+        if current_game.type == "HUMAN":
+            changes = 0  # количество изменений
+            sign = None  # Знак которым осуществлен ход
+            for i in range(SIZE_FIELD):
+                for j in range(SIZE_FIELD):
+                    if current_field[i][j] != old_field[i][j]:
+                        changes += 1
+                        sign = current_field[i][j]
+            if old_game.step_player == old_game.player_1_uuid:
+                if old_game.player_1_sign != sign:
+                    return False
+            if old_game.step_player == old_game.player_2_uuid:
+                if old_game.player_2_sign != sign:
+                    return False
+            if changes != 1:
                 return False
-        if old_game.step_player == old_game.player_2_uuid:
-            print(f"===sign player: {old_game.player_2_sign} - {sign}")
-            if old_game.player_2_sign != sign:
-                return False
-        print(f"==chamges = {changes}")
-        if changes != 1:
-            return False
         return True
-
-
-
 
     @staticmethod
     def check_win(field, player) -> bool:
@@ -120,33 +114,20 @@ class GameServiceMinimax(GameService):
         game.status = "active"
 
         return game
+
     @staticmethod
     def check_step(game: CurrentGame, player_uuid: str) -> bool:
         return game.step_player == player_uuid
-
-        # # ход игрока 1
-        # if game.step_player == game.player_1_uuid == player_uuid:
-        #     game.step_player = game.player_2_uuid
-        #     return True
-        #
-        # # ход игрока 2
-        # if game.step_player == game.player_2_uuid == player_uuid:
-        #     game.step_player = game.player_1_uuid
-        #     return True
-        # print(f"=== нарушен порядок хода")
-        # return False
 
     @staticmethod
     def change_step(game: CurrentGame, player_uuid: str) -> None:
         # ход игрока 1
         if game.step_player == game.player_1_uuid == player_uuid:
             game.step_player = game.player_2_uuid
-            print("===== 1 -> 2")
 
         # ход игрока 2
         if game.step_player == game.player_2_uuid == player_uuid:
             game.step_player = game.player_1_uuid
-            print("===== 2 -> 1")
 
     @staticmethod
     def create_game(player_uuid: str, game_type: str) -> CurrentGame | None:

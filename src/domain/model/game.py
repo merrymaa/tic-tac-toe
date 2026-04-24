@@ -2,7 +2,6 @@ from uuid import uuid4
 from domain.model.game_field import GameField
 
 
-
 class CurrentGame:
 
     def __init__(self, uuid=None):
@@ -44,4 +43,3 @@ class CurrentGame:
         else:
             self.winner = self._get_winner()
             self.draw = False
-        

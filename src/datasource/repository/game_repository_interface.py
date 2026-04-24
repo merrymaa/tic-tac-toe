@@ -8,6 +8,7 @@ class GameRepository(ABC):
     Интерфейс репозитория игры.
 
     """
+
     @abstractmethod
     def save_game(self, game: CurrentGame) -> None:
         pass
@@ -19,4 +20,3 @@ class GameRepository(ABC):
     @abstractmethod
     def get_available_games(self, player_uuid: str) -> list[Games]:
         pass
-

@@ -1,12 +1,8 @@
-from zoneinfo import available_timezones
-
 from flask import Blueprint, jsonify, request
 from di.container import container
-from web.module import controller_web
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
 from web.model.game_web import GameWebDTO
-from web.mapper.web_mapper import WebMapper
 
 game_bp = Blueprint('game_bp', __name__)
 
@@ -81,6 +77,7 @@ def get_current_game(user_uuid):
         print(f"Error in get_current_game: {e}")
         return jsonify({'error': 'Internal server error while fetching current games'}), 500
 
+
 @game_bp.route('/make_move', methods=['POST'])
 @UserAuthenticator.protected
 def make_move(user_uuid):
@@ -123,7 +120,6 @@ def join_game(user_uuid):
     try:
         controller = ControllerWeb(container.game_service)
         joined_game = controller.join_game(user_uuid)
-        print(f"===joined game = {joined_game}")
         if joined_game:
             return jsonify({"player": user_uuid, "joined to game": joined_game.uuid})
         else:

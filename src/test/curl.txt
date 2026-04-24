@@ -65,11 +65,11 @@ curl -X POST http://localhost:5000/make_move \
   -H "Content-Type: application/json" \
   -d '{
     "field": [
-    ["O", "X", "X"],
-    [" ", "O", "X"],
-    [" ", "X", "O"]
+    ["O", "O", "O"],
+    ["X", "X", "X"],
+    [" ", "X", " "]
     ],
-    "uuid_game": "e31c86d6-785f-4437-ab6a-97101cb97e2e"
+    "uuid_game": "bb33439d-3f07-405b-9543-b81bfa3cb472"
 }'
 
 ==== сделать ход - игрок 2

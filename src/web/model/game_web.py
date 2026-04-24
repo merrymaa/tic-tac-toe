@@ -9,13 +9,12 @@ class GameWebDTO:
         self.status = None  # waiting, game
         self.type = None
         self.step_player = None  # следующий ход игрока
-        self.player_1_uuid = None   # UUID игрока за X
-        self.player_2_uuid = None   # UUID игрока за O (для компьютера = "computer")
+        self.player_1_uuid = None  # UUID игрока за X
+        self.player_2_uuid = None  # UUID игрока за O (для компьютера = "computer")
         self.player_1_sign = None
         self.player_2_sign = None
-        self.draw = None   # ничья
+        self.draw = None  # ничья
         self.winner = None
-
 
     def set_uuid_player(self, uuid: str):
         self.player_1_uuid = uuid

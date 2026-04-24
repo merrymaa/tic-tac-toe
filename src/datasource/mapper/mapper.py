@@ -13,10 +13,10 @@ class Mapper:
 
     Преобразует модели DTO между собой
     """
+
     @staticmethod
     def datasource_to_domain(datasource_dto: Games) -> CurrentGame:
         game_domain = CurrentGame()
-
 
         game_domain.uuid = datasource_dto.uuid
         game_domain.field.field = datasource_dto.field
@@ -31,7 +31,6 @@ class Mapper:
         game_domain.winner = datasource_dto.winner
 
         return game_domain
-
 
     @staticmethod
     def domain_to_datasource(game: CurrentGame) -> Games:
@@ -68,29 +67,3 @@ class Mapper:
         game_web.winner = game_datasource.winner
 
         return game_web
-
-
-
-
-        # @staticmethod
-    # def from_domain_to_storage(game: CurrentGame) -> GameDTO:
-    #     game_dto = GameDTO()
-    #
-    #     game_dto.field.field = game.field.field
-    #     game_dto.uuid = game.UUID
-    #     game_dto.user_info.login = game.user_info.login
-    #     game_dto.user_info.password_hash = game.user_info.password_hash
-    #     game_dto.user_info.uuid = str(game.user_info.uuid)
-    #
-    #     return game_dto
-    #
-    # @staticmethod
-    # def from_storage_to_domain(game_dto: GameDTO) -> CurrentGame:
-    #     game = CurrentGame()
-    #     game.UUID = game_dto.uuid
-    #     game.field.field = game_dto.field.field
-    #     game.user_info.login = game_dto.user_info.login
-    #     game.user_info.password_hash = game_dto.user_info.password_hash
-    #     game.user_info.uuid = game_dto.user_info.uuid
-    #
-    #     return game
