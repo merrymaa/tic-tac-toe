@@ -35,7 +35,7 @@ class UserRepositoryImpl(UserRepository):
         finally:
             session_db.close()
 
-    def find_by_login(self, login: str) -> str:
+    def find_by_login(self, login: str) -> User:
         """"Ищет пользователя по логину и возвращает его UUID (str)"""
         session_db = self.session_factory()
         try:

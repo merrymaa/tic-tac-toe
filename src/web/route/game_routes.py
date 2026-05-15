@@ -3,20 +3,25 @@ from di.container import container
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
 from web.model.game_web import GameWebDTO
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 game_bp = Blueprint('game_bp', __name__)
 
 
 @game_bp.route('/new_game', methods=['POST'])
-@UserAuthenticator.protected
-def create_game(user_uuid):
+# @UserAuthenticator.protected
+@jwt_required()
+def create_game():
     """"Создание новой игры: с человеком или с компьютером"""
     try:
+        print("==========creating game...")
         data = request.get_json()
         if not data or 'game_type' not in data:
             return jsonify({'error': 'Missing game_type in request'}), 400
+
         game_type = data['game_type']
         new_game = GameWebDTO()
+        user_uuid = get_jwt_identity()
         new_game.set_uuid_player(user_uuid)
         new_game.set_game_type(game_type)
 
@@ -35,8 +40,9 @@ def create_game(user_uuid):
 
 
 @game_bp.route('/get_games')
-@UserAuthenticator.protected
-def get_games(user_uuid):
+# @UserAuthenticator.protected
+@jwt_required()
+def get_games():
     """"Получить список всех активных игр"""
     try:
         games = container.game_service.get_active_games()
@@ -44,7 +50,7 @@ def get_games(user_uuid):
 
         for game in games:
             all_games.append(game.uuid)
-
+        user_uuid = get_jwt_identity()
         return jsonify({f'query from user {user_uuid}, all active games': all_games})
     except Exception as e:
         print(f"Error in get_games: {e}")
@@ -52,8 +58,9 @@ def get_games(user_uuid):
 
 
 @game_bp.route('/get_current_game')
-@UserAuthenticator.protected
-def get_current_game(user_uuid):
+# @UserAuthenticator.protected
+@jwt_required()
+def get_current_game():
     """"Получить определенную игру"""
     try:
         data = request.get_json()
@@ -77,8 +84,9 @@ def get_current_game(user_uuid):
 
 
 @game_bp.route('/make_move', methods=['POST'])
-@UserAuthenticator.protected
-def make_move(user_uuid):
+# @UserAuthenticator.protected
+@jwt_required()
+def make_move():
     try:
         # from web.model.field_web import FieldWeb
         from web.model.game_web import GameWebDTO
@@ -97,6 +105,7 @@ def make_move(user_uuid):
         controller = ControllerWeb(container.game_service)
         game_web = controller.download_game(uuid_game)
         game_web.field.field = field
+        user_uuid = get_jwt_identity()
         game_web = controller.make_move(game_web, user_uuid)
         if game_web is None:
             return jsonify({'error': 'Game not found or not valid field'}), 404
@@ -113,10 +122,12 @@ def make_move(user_uuid):
 
 
 @game_bp.route('/join', methods=['POST'])
-@UserAuthenticator.protected
-def join_game(user_uuid):
+# @UserAuthenticator.protected
+@jwt_required()
+def join_game():
     try:
         controller = ControllerWeb(container.game_service)
+        user_uuid = get_jwt_identity()
         joined_game = controller.join_game(user_uuid)
         if joined_game:
             return jsonify({"player": user_uuid, "joined to game": joined_game.uuid})
@@ -129,9 +140,11 @@ def join_game(user_uuid):
 
 @game_bp.route('/get_user')
 @UserAuthenticator.protected
-def get_user(user_uuid):
+@jwt_required()
+def get_user():
     """"Получить информацию об игроке"""
     try:
+        user_uuid = get_jwt_identity()
         user = container.game_service.get_user(user_uuid)
         if user is None:
             return jsonify({'error': 'User not found'}), 404
