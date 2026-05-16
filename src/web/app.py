@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager
 from web.route.game_routes import game_bp
 from web.route.auth_routes import auth_bp
 from  flask_reqcheck  import  ReqCheck
+import datetime
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token
@@ -13,7 +14,8 @@ def create_app():
     app = Flask(__name__)
 
     app.config["JWT_SECRET_KEY"] = "key"
-    jwt = JWTManager(app)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=15)
+    # jwt = JWTManager(app)
 
 
     reqcheck = ReqCheck()

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, g
 from di.container import container
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
@@ -10,7 +10,8 @@ game_bp = Blueprint('game_bp', __name__)
 
 @game_bp.route('/new_game', methods=['POST'])
 # @UserAuthenticator.protected
-@jwt_required()
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
 def create_game():
     """"Создание новой игры: с человеком или с компьютером"""
     try:
@@ -21,7 +22,10 @@ def create_game():
 
         game_type = data['game_type']
         new_game = GameWebDTO()
-        user_uuid = get_jwt_identity()
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
+        # user_uuid = get_jwt_identity()
         new_game.set_uuid_player(user_uuid)
         new_game.set_game_type(game_type)
 
@@ -41,7 +45,7 @@ def create_game():
 
 @game_bp.route('/get_games')
 # @UserAuthenticator.protected
-@jwt_required()
+@UserAuthenticator.my_jwt_required
 def get_games():
     """"Получить список всех активных игр"""
     try:
@@ -50,7 +54,9 @@ def get_games():
 
         for game in games:
             all_games.append(game.uuid)
-        user_uuid = get_jwt_identity()
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
         return jsonify({f'query from user {user_uuid}, all active games': all_games})
     except Exception as e:
         print(f"Error in get_games: {e}")
@@ -59,7 +65,8 @@ def get_games():
 
 @game_bp.route('/get_current_game')
 # @UserAuthenticator.protected
-@jwt_required()
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
 def get_current_game():
     """"Получить определенную игру"""
     try:
@@ -85,7 +92,8 @@ def get_current_game():
 
 @game_bp.route('/make_move', methods=['POST'])
 # @UserAuthenticator.protected
-@jwt_required()
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
 def make_move():
     try:
         # from web.model.field_web import FieldWeb
@@ -105,7 +113,10 @@ def make_move():
         controller = ControllerWeb(container.game_service)
         game_web = controller.download_game(uuid_game)
         game_web.field.field = field
-        user_uuid = get_jwt_identity()
+        # user_uuid = get_jwt_identity()
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
         game_web = controller.make_move(game_web, user_uuid)
         if game_web is None:
             return jsonify({'error': 'Game not found or not valid field'}), 404
@@ -123,11 +134,15 @@ def make_move():
 
 @game_bp.route('/join', methods=['POST'])
 # @UserAuthenticator.protected
-@jwt_required()
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
 def join_game():
     try:
         controller = ControllerWeb(container.game_service)
-        user_uuid = get_jwt_identity()
+        # user_uuid = get_jwt_identity()
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
         joined_game = controller.join_game(user_uuid)
         if joined_game:
             return jsonify({"player": user_uuid, "joined to game": joined_game.uuid})
@@ -139,12 +154,16 @@ def join_game():
 
 
 @game_bp.route('/get_user')
-@UserAuthenticator.protected
+# @UserAuthenticator.protected
 @jwt_required()
+@UserAuthenticator.my_jwt_required
 def get_user():
     """"Получить информацию об игроке"""
     try:
-        user_uuid = get_jwt_identity()
+        # user_uuid = get_jwt_identity()
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
         user = container.game_service.get_user(user_uuid)
         if user is None:
             return jsonify({'error': 'User not found'}), 404

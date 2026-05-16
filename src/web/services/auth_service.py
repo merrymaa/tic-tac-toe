@@ -25,9 +25,6 @@ class AuthService:
 
     def refresh_access_token(self,  refresh_token: str) -> JwtResponse | None:
 
-        # if self.jwt_provider.validate_refresh_token(refresh_token):
-        #     print("===NOtValid....")
-        #     return None
         user_uuid = self.jwt_provider.get_uuid_from_token(refresh_token)
         if not user_uuid:
             return None

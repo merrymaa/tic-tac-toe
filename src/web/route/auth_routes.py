@@ -2,7 +2,7 @@ from urllib import response
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token
-from flask_reqcheck import validate_body, get_valid_request, validate
+from flask_reqcheck import validate_body, get_valid_request
 from di.container import container
 from datasource.model.sign_up_request import SignUpRequest
 import base64
@@ -25,27 +25,23 @@ auth_bp = Blueprint('auth_bp', __name__)
 #         return None, None
 
 
-@auth_bp.route('/login', methods=['POST'])
-def login():
+@auth_bp.route('/authorize', methods=['POST'])
+def authorize():
     username = request.json.get("login", None)
     password = request.json.get("password", None)
     if not username or not password:
         return jsonify({"Error": "Bad user name or password"}), 401
 
     jwt_request = JwtRequest(login=username, password=password)
-    response = container.auth_service.authorize(jwt_request)
+    jwt_response = container.auth_service.authorize(jwt_request)
 
-    # user_uuid = container.auth_service.authorize(jwt_request)
-    # user_uuid = container.user_service.authorize(username, password)
-    if not response:
+    if not jwt_response:
         return jsonify({"error": "User not authorised"}), 401
 
-    # access_token = container.jwt_provider.create_access_token(user_uuid)
-    # refresh_token = container.jwt_provider.create_refresh_token(user_uuid)
     return jsonify({
-        "type": response.type,
-        "accessToken": response.accessToken,
-        "refreshToken": response.refreshToken
+        "type": jwt_response.type,
+        "accessToken": jwt_response.accessToken,
+        "refreshToken": jwt_response.refreshToken
     }), 200
 
 @auth_bp.route('/refresh_access_token', methods=['POST'])
@@ -54,15 +50,15 @@ def refresh_access_token():
     if not refresh_token:
         return jsonify({"Error": "Invalid or expired refresh token"}), 400
 
-    response = container.auth_service.refresh_access_token(refresh_token)
-    if not response:
+    jwt_response = container.auth_service.refresh_access_token(refresh_token)
+    if not jwt_response:
         return jsonify({"Error": "Invalid or expired refresh token"}), 401
 
 
     return jsonify({
-        "type": response.type,
-        "accessToken": response.accessToken,
-        "refreshToken": response.refreshToken
+        "type": jwt_response.type,
+        "accessToken": jwt_response.accessToken,
+        "refreshToken": jwt_response.refreshToken
     }), 200
 
 @auth_bp.route('/refresh_refresh_token', methods=['POST'])
@@ -71,14 +67,14 @@ def refresh_refresh_token():
     if not refresh_token:
         return jsonify({"Error": "Invalid or expired refresh token"}), 400
 
-    response = container.auth_service.refresh_refresh_token(refresh_token)
-    if not response:
+    jwt_response = container.auth_service.refresh_refresh_token(refresh_token)
+    if not jwt_response:
         return jsonify({"Error": "Invalid or expired refresh token"}), 401
 
     return jsonify({
-        "type": response.type,
-        "accessToken": response.accessToken,
-        "refreshToken": response.refreshToken
+        "type": jwt_response.type,
+        "accessToken": jwt_response.accessToken,
+        "refreshToken": jwt_response.refreshToken
     }), 200
 
 
