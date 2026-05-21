@@ -1,3 +1,5 @@
+import datetime
+
 from datasource.database.database import Games, SessionLocal, User
 from datasource.repository.game_repository_interface import GameRepository
 from domain.model.game import CurrentGame
@@ -12,6 +14,7 @@ class GameRepositoryImpl(GameRepository):
         with self.session_factory() as session:
             db_game = session.query(Games).filter(Games.uuid == game.uuid).first()
             if db_game:
+                db_game.date_created = game.date_created
                 db_game.field = game.field.field
                 db_game.status = game.status
                 db_game.type = game.type
@@ -25,6 +28,7 @@ class GameRepositoryImpl(GameRepository):
             else:
                 new_game = Games(
                     uuid=game.uuid,
+                    date_created = datetime.datetime.now(),
                     field=game.field.field,
                     status=game.status,
                     type=game.type,
@@ -55,12 +59,27 @@ class GameRepositoryImpl(GameRepository):
             ).all()
             return active_games
 
+    # def get_finished_games(self) -> list[Games]:
+    #     with self.session_factory() as session:
+    #         finished_games = session.query(Games).filter(
+    #             Games.status == "finish"
+    #         ).all()
+    #         return finished_games
+
+    def get_finished_games(self, user_uuid: str) -> list[Games]:
+        with self.session_factory() as session:
+            finished_games = session.query(Games).filter(
+                Games.status == "finish",
+                (Games.player_1_uuid == user_uuid) | (Games.player_2_uuid == user_uuid)
+            ).all()
+            return finished_games
+
     def get_current_game(self, game_uuid: str) -> Games:
         with self.session_factory() as session:
             current_game = session.query(Games).filter(Games.uuid == game_uuid).first()
             return current_game
 
-    def get_user(self, user_uuid) -> User:
+    def get_user(self, user_uuid: str) -> User:
         with self.session_factory() as session:
             current_user = session.query(User).filter(User.uuid == user_uuid).first()
             return current_user
@@ -79,6 +98,7 @@ class GameRepositoryImpl(GameRepository):
             current_game = CurrentGame()
 
             current_game.uuid = game.uuid
+            current_game.date_created = game.date_created
             current_game.field.field = game.field
             current_game.status = game.status
             current_game.type = game.type

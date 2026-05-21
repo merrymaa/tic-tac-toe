@@ -1,8 +1,7 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+import datetime as dt
 
-pass1 = "pa3453454"
-has_pass_1 = generate_password_hash(pass1)
-pass2 = "pa3453454"
+d = dt.datetime.now()
 
-print(check_password_hash(has_pass_1, pass2))
+for i in d.timetuple():
+    print(i)
 

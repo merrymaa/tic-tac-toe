@@ -5,18 +5,14 @@ from web.route.auth_routes import auth_bp
 from  flask_reqcheck  import  ReqCheck
 import datetime
 
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token
-from flask_reqcheck import validate_body, get_valid_request, validate
 
 
 def create_app():
     app = Flask(__name__)
 
     app.config["JWT_SECRET_KEY"] = "key"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=15)
-    # jwt = JWTManager(app)
-
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=59)
+    jwt = JWTManager(app)
 
     reqcheck = ReqCheck()
     reqcheck.init_app(app)

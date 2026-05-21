@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, String, Column, ARRAY
+from sqlalchemy import create_engine, String, Column, ARRAY, DateTime
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
 
@@ -24,6 +24,7 @@ class Games(Base):
     __tablename__ = "games"
 
     uuid = Column(String, primary_key=True, nullable=False)
+    date_created = Column(DateTime, nullable=False)
     field = Column(ARRAY(String, dimensions=2), nullable=False)
     status = Column(String, default="waiting", nullable=False)  # waiting, active, finish
     type = Column(String, nullable=False)  # с человеком - HUMAN, с компьютером - AI

@@ -105,7 +105,13 @@ class GameServiceMinimax(GameService):
         return False
 
     def is_game_over(self, game: CurrentGame) -> bool:
-        return self.check_win(game.field.field, HUMAN) or self.check_win(game.field.field, AI)
+        if game.type == "AI":
+            return self.check_win(game.field.field, HUMAN) or self.check_win(game.field.field, AI) or not self._available_steps(
+                game.field.field)
+        else:
+            return self.check_win(game.field.field, "X") or self.check_win(game.field.field,
+                                                                           "O") or not self._available_steps(
+                game.field.field)
 
     @staticmethod
     def join_game(player_uuid: str, game: CurrentGame) -> CurrentGame:

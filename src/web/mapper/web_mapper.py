@@ -41,6 +41,7 @@ class WebMapper:
             game_domain = CurrentGame()
 
             game_domain.uuid = game_web.uuid
+            game_domain.date_created = game_web.date_created
             game_domain.field.field = game_web.field.field
             game_domain.status = game_web.status  # waiting, game
             game_domain.type = game_web.type
@@ -63,6 +64,7 @@ class WebMapper:
             game_web = GameWebDTO()
 
             game_web.uuid = game_domain.uuid
+            game_web.date_created = game_domain.date_created
             game_web.field.field = game_domain.field.field
             game_web.status = game_domain.status
             game_web.type = game_domain.type

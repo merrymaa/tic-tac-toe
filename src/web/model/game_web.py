@@ -5,6 +5,7 @@ from uuid import uuid4
 class GameWebDTO:
     def __init__(self, uuid=None, field=None):
         self.uuid = str(uuid4()) if not uuid else uuid
+        self.date_created = None
         self.field = FieldWeb() if not field else field
         self.status = None  # waiting, game
         self.type = None

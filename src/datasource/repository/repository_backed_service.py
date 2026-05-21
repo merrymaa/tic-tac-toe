@@ -7,7 +7,7 @@ from datasource.database.database import Games
 from datasource.database.database import User
 
 
-class RepositoryBackedService(GameService):
+class RepositoryBackedService():
 
     def __init__(self):
         self.game_repository = GameRepositoryImpl()
@@ -16,6 +16,8 @@ class RepositoryBackedService(GameService):
     def create_game(self, player_uuid: str, game_type: str) -> CurrentGame | None:
         try:
             new_game = self.game_service.create_game(player_uuid, game_type)
+            if not new_game:
+                raise Exception
             self.game_repository.add_game(new_game)
             return new_game
         except Exception as e:
@@ -85,6 +87,9 @@ class RepositoryBackedService(GameService):
 
     def get_available_games(self, player_uuid: str) -> list[Games]:
         return self.game_repository.get_available_games(player_uuid)
+
+    def get_finished_games(self, player_uuid: str) -> list[Games]:
+        return self.game_repository.get_finished_games(player_uuid)
 
     def join_game(self, player_uuid: str) -> CurrentGame | None:
         try:

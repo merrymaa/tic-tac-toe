@@ -1,5 +1,6 @@
 from uuid import uuid4
 from domain.model.game_field import GameField
+import datetime as dt
 
 
 class CurrentGame:
@@ -7,6 +8,7 @@ class CurrentGame:
     def __init__(self, uuid=None):
         self.field = GameField()
         self.uuid = str(uuid4()) if not uuid else uuid
+        self.date_created = dt.datetime.now()
         self.status = None
         self.type = None
         self.step_player = None
@@ -40,6 +42,7 @@ class CurrentGame:
     def set_game_over(self) -> None:
         if not self._get_winner():
             self.draw = True
+            self.winner = False
         else:
             self.winner = self._get_winner()
             self.draw = False

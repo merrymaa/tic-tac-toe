@@ -15,7 +15,7 @@ class Mapper:
     @staticmethod
     def datasource_to_domain(datasource_dto: Games) -> CurrentGame:
         game_domain = CurrentGame()
-
+        game_domain.date_created = datasource_dto.date_created
         game_domain.uuid = datasource_dto.uuid
         game_domain.field.field = datasource_dto.field
         game_domain.status = datasource_dto.status  # waiting, game
@@ -36,6 +36,7 @@ class Mapper:
 
         datasource_dto = Games()
         datasource_dto.uuid = game.uuid
+        datasource_dto.date_created = game.date_created
         datasource_dto.field = game.field.field
         datasource_dto.status = game.status  # waiting, game
         datasource_dto.type = game.type
@@ -53,6 +54,7 @@ class Mapper:
     def datasource_to_web(game_datasource: Games) -> GameWebDTO:
         game_web = GameWebDTO(uuid=game_datasource.uuid)
 
+        game_web.date_created = game_datasource.date_created
         game_web.field.field = game_datasource.field.field
         game_web.status = game_datasource.status  # waiting, game
         game_web.type = game_datasource.type

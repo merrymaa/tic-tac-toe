@@ -41,6 +41,7 @@ class JwtProvider:
             decoded = decode_token(token, allow_expired=False)
             return decoded.get("sub")
         except Exception as e:
+            print(f"Error: {e}")
             return None
 
 

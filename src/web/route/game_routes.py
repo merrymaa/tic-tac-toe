@@ -3,13 +3,12 @@ from di.container import container
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
 from web.model.game_web import GameWebDTO
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 game_bp = Blueprint('game_bp', __name__)
 
 
 @game_bp.route('/new_game', methods=['POST'])
-# @UserAuthenticator.protected
 # @jwt_required()
 @UserAuthenticator.my_jwt_required
 def create_game():
@@ -43,8 +42,8 @@ def create_game():
         return jsonify({'error': 'Internal server error during game creation'}), 500
 
 
-@game_bp.route('/get_games')
-# @UserAuthenticator.protected
+@game_bp.route('/get_games', methods=['POST'])
+# @jwt_required()
 @UserAuthenticator.my_jwt_required
 def get_games():
     """"Получить список всех активных игр"""
@@ -62,9 +61,26 @@ def get_games():
         print(f"Error in get_games: {e}")
         return jsonify({'error': 'Internal server error while fetching games'}), 500
 
+@game_bp.route('/get_finished_games', methods=['POST'])
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
+def get_finished_games():
+    """"Получить список всех завершенных игр"""
+    try:
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'Cant create new game'}), 400
+        games = container.game_service.get_finished_games(user_uuid)
+        all_games = []
+
+        for game in games:
+            all_games.append(game.uuid)
+        return jsonify({f'query from user {user_uuid}, all finished games': all_games})
+    except Exception as e:
+        print(f"Error in get_finished_games: {e}")
+        return jsonify({'error': 'Internal server error while fetching games'}), 500
 
 @game_bp.route('/get_current_game')
-# @UserAuthenticator.protected
 # @jwt_required()
 @UserAuthenticator.my_jwt_required
 def get_current_game():
@@ -91,7 +107,6 @@ def get_current_game():
 
 
 @game_bp.route('/make_move', methods=['POST'])
-# @UserAuthenticator.protected
 # @jwt_required()
 @UserAuthenticator.my_jwt_required
 def make_move():
@@ -133,7 +148,6 @@ def make_move():
 
 
 @game_bp.route('/join', methods=['POST'])
-# @UserAuthenticator.protected
 # @jwt_required()
 @UserAuthenticator.my_jwt_required
 def join_game():
@@ -153,13 +167,13 @@ def join_game():
         return jsonify({'Error': 'Internal server error while joining game'}), 500
 
 
-@game_bp.route('/get_user')
-# @UserAuthenticator.protected
-@jwt_required()
+@game_bp.route('/get_user', methods=['POST'])
+# @jwt_required()
 @UserAuthenticator.my_jwt_required
 def get_user():
     """"Получить информацию об игроке"""
     try:
+        print("==== start getting...")
         # user_uuid = get_jwt_identity()
         user_uuid = getattr(g, 'user_uuid', None)
         if not user_uuid:
