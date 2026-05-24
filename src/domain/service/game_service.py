@@ -15,3 +15,22 @@ class GameService(ABC):
     def is_game_over(self, game: CurrentGame) -> bool:
         pass
 
+    @abstractmethod
+    def join_game(self, player_uuid: str, game: CurrentGame) -> CurrentGame:
+        pass
+
+    @abstractmethod
+    def create_game(self, player_uuid: str, game_type: str) -> CurrentGame | None:
+        pass
+
+    @abstractmethod
+    def check_win(self, field, player) -> bool:
+        pass
+
+    @abstractmethod
+    def check_step(self, game: CurrentGame, player_uuid: str) -> bool:
+        pass
+
+    @abstractmethod
+    def change_step(self, game: CurrentGame, player_uuid: str) -> None:
+        pass

@@ -1,6 +1,6 @@
 import datetime
-
-from datasource.database.database import Games, SessionLocal, User
+from sqlalchemy import select, func, cast, Float
+from datasource.database.database import Games, SessionLocal, User, Leaderboard
 from datasource.repository.game_repository_interface import GameRepository
 from domain.model.game import CurrentGame
 from datasource.mapper.mapper import Mapper
@@ -28,7 +28,7 @@ class GameRepositoryImpl(GameRepository):
             else:
                 new_game = Games(
                     uuid=game.uuid,
-                    date_created = datetime.datetime.now(),
+                    date_created=datetime.datetime.now(),
                     field=game.field.field,
                     status=game.status,
                     type=game.type,
@@ -110,3 +110,116 @@ class GameRepositoryImpl(GameRepository):
             current_game.draw = game.draw
             current_game.winner = game.winner
         return current_game
+
+    def get_statistic(self, n: int) -> dict:
+        """"
+        Выполняется SQL-запрос:
+        with
+            winners as (
+                select player_1_uuid as user_uuid, count(*) as count_wins
+                from games
+                where player_1_uuid = winner and status = 'finish'
+                group by player_1_uuid
+                union
+                select player_2_uuid, count(*) as count_wins
+                from games
+                where player_2_uuid = winner and status = 'finish'
+                group by player_2_uuid
+                ),
+            fails as (
+                select winner as fails, count(*)
+                from games
+                where status = 'finish' and player_1_uuid != winner
+                group by winner
+                having winner != 'false'
+                union
+                select winner, count(*)
+                from games
+                where status = 'finish' and player_2_uuid != winner
+                group by winner
+                having winner != 'false'
+            ),
+            draws as (
+                select player_1_uuid as user_uuid, count(draw)
+                from games
+                where draw = 'true'
+                group by player_1_uuid
+                union
+                select player_2_uuid, count(draw)
+                from games
+                where draw = 'true'
+                group by player_2_uuid
+                )
+        select
+            w.user_uuid,
+            (w.count_wins::float / (d.count::float + f.count::float)) as ratio
+        from winners as w
+        join draws as d on w.user_uuid = d.user_uuid
+        join fails as f on w.user_uuid = f.fails
+        order by ratio desc
+"""
+
+        wins_p1 = (
+            select(Games.player_1_uuid.label("user_uuid"), func.count().label("count_wins"))
+            .where(Games.player_1_uuid == Games.winner, Games.status == "finish")
+            .group_by(Games.player_1_uuid)
+        )
+        wins_p2 = (
+            select(Games.player_2_uuid.label("user_uuid"), func.count().label("count_wins"))
+            .where(Games.player_2_uuid == Games.winner, Games.status == "finish")
+            .group_by(Games.player_2_uuid)
+        )
+        winners_cte = wins_p1.union(wins_p2).cte("winners")
+
+        fails_p1 = (
+            select(Games.winner.label("fails"), func.count().label("count"))
+            .where(Games.status == "finish", Games.player_1_uuid != Games.winner)
+            .group_by(Games.winner)
+            .having(Games.winner != "false")
+        )
+        fails_p2 = (
+            select(Games.winner.label("fails"), func.count().label("count"))
+            .where(Games.status == "finish", Games.player_2_uuid != Games.winner)
+            .group_by(Games.winner)
+            .having(Games.winner != "false")
+        )
+        fails_cte = fails_p1.union(fails_p2).cte("fails")
+
+        draws_p1 = (
+            select(Games.player_1_uuid.label("user_uuid"), func.count(Games.draw).label("count"))
+            .where(Games.draw == "true")
+            .group_by(Games.player_1_uuid)
+        )
+        draws_p2 = (
+            select(Games.player_2_uuid.label("user_uuid"), func.count(Games.draw).label("count"))
+            .where(Games.draw == "true")
+            .group_by(Games.player_2_uuid)
+        )
+        draws_cte = draws_p1.union(draws_p2).cte("draws")
+
+        ratio = (
+                cast(winners_cte.c.count_wins, Float) /
+                (cast(draws_cte.c.count, Float) + cast(fails_cte.c.count, Float))
+        )
+
+        main_stmt = (
+            select(winners_cte.c.user_uuid, ratio.label("ratio"))
+            .join(draws_cte, winners_cte.c.user_uuid == draws_cte.c.user_uuid)
+            .join(fails_cte, winners_cte.c.user_uuid == fails_cte.c.fails)
+            .order_by(ratio.desc())
+
+        )
+
+        result_dict = {}
+        count = 0
+        with self.session_factory() as session:
+            results = session.execute(main_stmt).all()
+
+            for row in results:
+                session.merge(Leaderboard(user_uuid=row.user_uuid, ratio=row.ratio))
+                if count < n:
+                    result_dict[row.user_uuid] = row.ratio
+                    count += 1
+
+            session.commit()
+        return result_dict

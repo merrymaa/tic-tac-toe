@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class JwtRequest(BaseModel):
     login: str
     password: str
@@ -13,5 +14,3 @@ class JwtResponse(BaseModel):
 
 class RefreshJwtRequest:
     refreshToken: str
-
-

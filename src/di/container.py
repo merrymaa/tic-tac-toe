@@ -4,6 +4,7 @@ from datasource.repository.repository_backed_service import RepositoryBackedServ
 from web.model.jwt_provider import JwtProvider
 from web.services.auth_service import AuthService
 
+
 class Container:
     def __init__(self):
         init_db()

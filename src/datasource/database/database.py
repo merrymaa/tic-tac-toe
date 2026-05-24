@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, String, Column, ARRAY, DateTime
+from sqlalchemy import create_engine, String, Column, ARRAY, DateTime, Float
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
 
@@ -35,6 +35,13 @@ class Games(Base):
     player_2_sign = Column(CHAR, default="O")
     draw = Column(String, nullable=True)  # ничья True / False
     winner = Column(String, nullable=True)  # победитель (если есть)
+
+
+class Leaderboard(Base):
+    __tablename__ = "leaderboard"
+
+    user_uuid = Column(String, primary_key=True, nullable=False)
+    ratio = Column(Float, nullable=False)
 
 
 def init_db():

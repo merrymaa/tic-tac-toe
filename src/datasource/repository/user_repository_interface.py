@@ -14,3 +14,7 @@ class UserRepository(ABC):
     @abstractmethod
     def get_user(self, user_uuid) -> User:
         pass
+
+    @abstractmethod
+    def find_by_login(self, login: str) -> User:
+        pass

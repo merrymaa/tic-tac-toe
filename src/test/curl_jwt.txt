@@ -2,7 +2,7 @@
 curl -X POST http://localhost:5000/register \
 -H "Content-Type: application/json" \
   -d '{
-  "login": "user_7",
+  "login": "user_1",
   "password": "pa3453454"
 }'
 
@@ -10,7 +10,7 @@ curl -X POST http://localhost:5000/register \
 curl -X POST http://localhost:5000/login \
 -H "Content-Type: application/json" \
   -d '{
-  "login": "user_6",
+  "login": "user_4",
   "password": "pa3453454"
 }'
 
@@ -41,7 +41,7 @@ curl -X POST http://localhost:5000/new_game \
 
 ==== запрос на создание новой игры:
 curl -X POST http://localhost:5000/new_game \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM1NDA4NywianRpIjoiM2VkZDdkMTctZjI1Zi00NTM5LTg4YWItYWU4MWNiZjg2MGI3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImExZGFhZTExLTUwODItNGYzMi05ZjRiLWU1ODg5ZGI0NjUwYSIsIm5iZiI6MTc3OTM1NDA4NywiY3NyZiI6IjY0N2EzYWM5LTBkZDctNDQ0NC05ZDVkLTQ4ZGVhNzY1NTYyZSIsImV4cCI6MTc3OTM1NzYyN30.AcK1qMrKiiLNAW5zWULQSgLmeu2SwPs9ZgoLgZs8FyQ" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYwNTk5OSwianRpIjoiMjI0MGVjYTAtYjZlMi00MGMxLWE1M2QtOTBmODI2ZGJkN2Y3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjhkZDcwZmY0LTJhZDctNDliMC1hY2Y2LTY0MGNmNmExZWZiNCIsIm5iZiI6MTc3OTYwNTk5OSwiY3NyZiI6IjM2YzVkYWUwLThkOGEtNDY5Yy1iMDAyLTM0ODlhNmJiMzhiMSIsImV4cCI6MTc3OTYwOTUzOX0.AOKxBMq-oXXoULR9gu98meWSec5nRFbegN3aVNK77yg" \
   -H "Content-Type: application/json" \
   -d '{
   "game_type" : "HUMAN"
@@ -49,33 +49,33 @@ curl -X POST http://localhost:5000/new_game \
 
 ==== запрос на присоединение к игре
 curl -X POST http://localhost:5000/join \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM2NjE4MSwianRpIjoiYWQ5OGExMzEtNmM3Mi00N2JjLTg4MGItY2ZkODM3MDM4NmIzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Ijg3YTg0MTQzLWM3OWItNDJlOS1iYzgxLWFjZDVhY2RmNjgyMiIsIm5iZiI6MTc3OTM2NjE4MSwiY3NyZiI6IjlmZGRkYTIwLTQ2YzAtNDhiZC1hMWYzLWViNjVmOTJhYmI1YSIsImV4cCI6MTc3OTM2OTcyMX0.mulKgMNND6-kYcH98V-ZIxsGaTJIeGfCBypKvGU12Bo" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYwNjA0MCwianRpIjoiM2UwOTYxMjQtNDQ4NC00NTYyLWExZDAtNmUwN2ZjYzg5YzA0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImNkMGZjNzI5LWRhZGQtNDFkYS05Y2ExLWYxMGE5NDc4NjRiNSIsIm5iZiI6MTc3OTYwNjA0MCwiY3NyZiI6ImZlYjMyMDQ0LTBiN2EtNDZlYS04NTE5LWZiMzExY2ZmMGFjOSIsImV4cCI6MTc3OTYwOTU4MH0.Li-hIEhovUAYwvVBDc29P-_kLWhm17TG4xhvcbAyNwg" \
   -H "Content-Type: application/json"
 
 ==== сделать ход - игрок 1
 curl -X POST http://localhost:5000/make_move \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM2NjE1MCwianRpIjoiZWFkMTJlZjMtN2E3Ni00ZTg2LTg1ZjQtNzk5MjllOGMxYmExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImExZGFhZTExLTUwODItNGYzMi05ZjRiLWU1ODg5ZGI0NjUwYSIsIm5iZiI6MTc3OTM2NjE1MCwiY3NyZiI6Ijg1OTdmYzQ1LTBlM2EtNDc1My1hYjRmLTQyMWQ0MGE0N2ExNSIsImV4cCI6MTc3OTM2OTY5MH0.B8CJ3EwsEy31WhycAegHYpsO42uf9lNw0SS1jhH7r50" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYwNTk5OSwianRpIjoiMjI0MGVjYTAtYjZlMi00MGMxLWE1M2QtOTBmODI2ZGJkN2Y3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjhkZDcwZmY0LTJhZDctNDliMC1hY2Y2LTY0MGNmNmExZWZiNCIsIm5iZiI6MTc3OTYwNTk5OSwiY3NyZiI6IjM2YzVkYWUwLThkOGEtNDY5Yy1iMDAyLTM0ODlhNmJiMzhiMSIsImV4cCI6MTc3OTYwOTUzOX0.AOKxBMq-oXXoULR9gu98meWSec5nRFbegN3aVNK77yg" \
   -H "Content-Type: application/json" \
   -d '{
     "field": [
-    ["O", "X", "X"],
     ["O", "X", " "],
-    [" ", " ", " "]
+    ["O", "X", " "],
+    [" ", "X", " "]
     ],
-    "uuid_game": "1c2087dc-2988-45bf-87f9-a18a3fea4690"
+    "uuid_game": "27beeebe-9bed-4ba0-b71b-017906738186"
 }'
 
 ==== сделать ход - игрок 2
 curl -X POST http://localhost:5000/make_move \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM2NjE4MSwianRpIjoiYWQ5OGExMzEtNmM3Mi00N2JjLTg4MGItY2ZkODM3MDM4NmIzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Ijg3YTg0MTQzLWM3OWItNDJlOS1iYzgxLWFjZDVhY2RmNjgyMiIsIm5iZiI6MTc3OTM2NjE4MSwiY3NyZiI6IjlmZGRkYTIwLTQ2YzAtNDhiZC1hMWYzLWViNjVmOTJhYmI1YSIsImV4cCI6MTc3OTM2OTcyMX0.mulKgMNND6-kYcH98V-ZIxsGaTJIeGfCBypKvGU12Bo" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYwNjA0MCwianRpIjoiM2UwOTYxMjQtNDQ4NC00NTYyLWExZDAtNmUwN2ZjYzg5YzA0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImNkMGZjNzI5LWRhZGQtNDFkYS05Y2ExLWYxMGE5NDc4NjRiNSIsIm5iZiI6MTc3OTYwNjA0MCwiY3NyZiI6ImZlYjMyMDQ0LTBiN2EtNDZlYS04NTE5LWZiMzExY2ZmMGFjOSIsImV4cCI6MTc3OTYwOTU4MH0.Li-hIEhovUAYwvVBDc29P-_kLWhm17TG4xhvcbAyNwg" \
   -H "Content-Type: application/json" \
   -d '{
     "field": [
-    ["X", "X", "O"],
-    ["O", "O", "X"],
-    ["X", "O", " "]
+    ["O", "X", " "],
+    ["O", "X", " "],
+    [" ", " ", " "]
     ],
-    "uuid_game": "b556ab6b-4bad-4273-be53-22f90df8b5a9"
+    "uuid_game": "27beeebe-9bed-4ba0-b71b-017906738186"
 }'
 
 
@@ -98,30 +98,28 @@ curl -X POST http://localhost:5000/get_user \
 " \
   -H "Content-Type: application/json"
 
+==== запрос на get_statistic
+curl -X POST http://localhost:5000/get_statistic/ \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYxNDk3MCwianRpIjoiZDUzYTIyZTctYzNlNS00MWFlLTgwZmEtN2NmMDAwZDNkMmI5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImNkMGZjNzI5LWRhZGQtNDFkYS05Y2ExLWYxMGE5NDc4NjRiNSIsIm5iZiI6MTc3OTYxNDk3MCwiY3NyZiI6ImFmYjc0NzFkLWY3NTItNDI5My1hYzAyLWYzM2Y1ZjQ5MGZmNCIsImV4cCI6MTc3OTYxODUxMH0.lYlaBXnrEmeLm6OT81syQz_OxBi48fM1MJGVswjP0GI" \
+  -H "Content-Type: application/json" \
+  -d '{"n": 2}'
+
 
 
 player_1
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM2NjE1MCwianRpIjoiZWFkMTJlZjMtN2E3Ni00ZTg2LTg1ZjQtNzk5MjllOGMxYmExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImExZGFhZTExLTUwODItNGYzMi05ZjRiLWU1ODg5ZGI0NjUwYSIsIm5iZiI6MTc3OTM2NjE1MCwiY3NyZiI6Ijg1OTdmYzQ1LTBlM2EtNDc1My1hYjRmLTQyMWQ0MGE0N2ExNSIsImV4cCI6MTc3OTM2OTY5MH0.B8CJ3EwsEy31WhycAegHYpsO42uf9lNw0SS1jhH7r50
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYxNDk3MCwianRpIjoiZDUzYTIyZTctYzNlNS00MWFlLTgwZmEtN2NmMDAwZDNkMmI5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImNkMGZjNzI5LWRhZGQtNDFkYS05Y2ExLWYxMGE5NDc4NjRiNSIsIm5iZiI6MTc3OTYxNDk3MCwiY3NyZiI6ImFmYjc0NzFkLWY3NTItNDI5My1hYzAyLWYzM2Y1ZjQ5MGZmNCIsImV4cCI6MTc3OTYxODUxMH0.lYlaBXnrEmeLm6OT81syQz_OxBi48fM1MJGVswjP0GI
 
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlh
-dCI6MTc3OTM2NjE1MCwianRpIjoiZjkxZmJkNmQtOWEwNy00NTA0LWJkOGQtN2FiZWEzNjIwYjBhIiwi
-dHlwZSI6InJlZnJlc2giLCJzdWIiOiJhMWRhYWUxMS01MDgyLTRmMzItOWY0Yi1lNTg4OWRiNDY1MGEi
-LCJuYmYiOjE3NzkzNjYxNTAsImNzcmYiOiI0NDZjMjczOS01ZThjLTQ1NmYtOTAyYS1hMDdkYzJlYTIx
-ZGYiLCJleHAiOjE3ODE5NTgxNTB9.7L5TZJ5gcy7KHmHuue1JHd26jqwC_cwQ2-VggRP9q-s",
-  "type": "Bearer"
-}
 
 
 player_2
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTM2NjE4MSwianRpIjoiYWQ5OGExMzEtNmM3Mi00N2JjLTg4MGItY2ZkODM3MDM4NmIzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Ijg3YTg0MTQzLWM3OWItNDJlOS1iYzgxLWFjZDVhY2RmNjgyMiIsIm5iZiI6MTc3OTM2NjE4MSwiY3NyZiI6IjlmZGRkYTIwLTQ2YzAtNDhiZC1hMWYzLWViNjVmOTJhYmI1YSIsImV4cCI6MTc3OTM2OTcyMX0.mulKgMNND6-kYcH98V-ZIxsGaTJIeGfCBypKvGU12Bo
-
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3OTYwNjA0MCwianRpIjoiM2UwOTYxMjQtNDQ4NC00NTYyLWExZDAtNmUwN2ZjYzg5YzA0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImNkMGZjNzI5LWRhZGQtNDFkYS05Y2ExLWYxMGE5NDc4NjRiNSIsIm5iZiI6MTc3OTYwNjA0MCwiY3NyZiI6ImZlYjMyMDQ0LTBiN2EtNDZlYS04NTE5LWZiMzExY2ZmMGFjOSIsImV4cCI6MTc3OTYwOTU4MH0.Li-hIEhovUAYwvVBDc29P-_kLWhm17TG4xhvcbAyNwg
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlh
-dCI6MTc3OTM2NjE4MSwianRpIjoiYTNmYzE2NTgtMjdhMC00MWVlLTkyYjYtZWMxODZjNTBlOGI1Iiwi
-dHlwZSI6InJlZnJlc2giLCJzdWIiOiI4N2E4NDE0My1jNzliLTQyZTktYmM4MS1hY2Q1YWNkZjY4MjIi
-LCJuYmYiOjE3NzkzNjYxODEsImNzcmYiOiI0MWI2ZDhmMC0zMzVlLTQzYzctYmI0MS02NWVkMWVlOGQ3
-NjEiLCJleHAiOjE3ODE5NTgxODF9.0cUvUEfeAUP9rAH75crnSbL7OzEuBU_hJ-Fmq5MHT-k",
+dCI6MTc3OTYwNjA0MCwianRpIjoiMjg2YWJkNmQtZmVlMy00NThmLWE0NmMtYmVkZjU5ODM3NWEwIiwi
+dHlwZSI6InJlZnJlc2giLCJzdWIiOiJjZDBmYzcyOS1kYWRkLTQxZGEtOWNhMS1mMTBhOTQ3ODY0YjUi
+LCJuYmYiOjE3Nzk2MDYwNDAsImNzcmYiOiIyMzM4ZWEyMi02OTY0LTRlZTktYjYyMS0wZDA5NTliMmE0
+Y2UiLCJleHAiOjE3ODIxOTgwNDB9.3bLivpQ7p2YvAsRj1fykGzj2VXK18oXHZUO3726Hp7A",
   "type": "Bearer"
 }
 

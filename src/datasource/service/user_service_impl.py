@@ -24,5 +24,3 @@ class UserServiceImpl(UserService):
 
         return None
 
-    def authorize_with_jwt(self, jwt_request: JwtRequest) -> JwtResponse | None:
-        pass

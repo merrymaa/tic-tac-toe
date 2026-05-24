@@ -3,7 +3,7 @@ from di.container import container
 from web.module.controller_web import ControllerWeb
 from web.module.user_authenticator import UserAuthenticator
 from web.model.game_web import GameWebDTO
-from flask_jwt_extended import jwt_required
+# from flask_jwt_extended import jwt_required
 
 game_bp = Blueprint('game_bp', __name__)
 
@@ -61,6 +61,7 @@ def get_games():
         print(f"Error in get_games: {e}")
         return jsonify({'error': 'Internal server error while fetching games'}), 500
 
+
 @game_bp.route('/get_finished_games', methods=['POST'])
 # @jwt_required()
 @UserAuthenticator.my_jwt_required
@@ -79,6 +80,7 @@ def get_finished_games():
     except Exception as e:
         print(f"Error in get_finished_games: {e}")
         return jsonify({'error': 'Internal server error while fetching games'}), 500
+
 
 @game_bp.route('/get_current_game')
 # @jwt_required()
@@ -111,7 +113,6 @@ def get_current_game():
 @UserAuthenticator.my_jwt_required
 def make_move():
     try:
-        # from web.model.field_web import FieldWeb
         from web.model.game_web import GameWebDTO
         if not request.is_json:
             return jsonify({
@@ -173,7 +174,6 @@ def join_game():
 def get_user():
     """"Получить информацию об игроке"""
     try:
-        print("==== start getting...")
         # user_uuid = get_jwt_identity()
         user_uuid = getattr(g, 'user_uuid', None)
         if not user_uuid:
@@ -189,3 +189,22 @@ def get_user():
     except Exception as e:
         print(f"Error in get_user: {e}")
         return jsonify({'error': 'Internal server error while fetching user info'}), 500
+
+
+@game_bp.route('/get_statistic/', methods=['POST'])
+# @jwt_required()
+@UserAuthenticator.my_jwt_required
+def get_statistic():
+    try:
+        user_uuid = getattr(g, 'user_uuid', None)
+        if not user_uuid:
+            return jsonify({'error': 'There isn\'t user_uuid'}), 400
+        data = request.get_json()
+        n = data.get('n')
+        if not n or not isinstance(n, int) or n <= 0:
+            return jsonify({"error": "n is not correct"}), 400
+        controller = ControllerWeb(container.game_service)
+        result = controller.get_statistic(n)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

@@ -52,3 +52,10 @@ class ControllerWeb:
         except Exception as e:
             print(f"Error in ControllerWeb.join_game - {e}")
             raise
+
+    def get_statistic(self, n: int) -> dict:
+        try:
+            return self.game_service.get_statistic(n)
+        except Exception as e:
+            print(f"Error in ControllerWeb.join_game - {e}")
+            raise

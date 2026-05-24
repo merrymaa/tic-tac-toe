@@ -10,6 +10,7 @@ from web.model.auth_dto import JwtRequest
 
 auth_bp = Blueprint('auth_bp', __name__)
 
+
 @auth_bp.route('/login', methods=['POST'])
 def login():
     username = request.json.get("login", None)
@@ -29,6 +30,7 @@ def login():
         "refreshToken": jwt_response.refreshToken
     }), 200
 
+
 @auth_bp.route('/refresh_access_token', methods=['POST'])
 def refresh_access_token():
     refresh_token = request.json.get("refresh_token", None)
@@ -39,12 +41,12 @@ def refresh_access_token():
     if not jwt_response:
         return jsonify({"Error": "Invalid or expired refresh token"}), 401
 
-
     return jsonify({
         "type": jwt_response.type,
         "accessToken": jwt_response.accessToken,
         "refreshToken": jwt_response.refreshToken
     }), 200
+
 
 @auth_bp.route('/refresh_refresh_token', methods=['POST'])
 def refresh_refresh_token():
@@ -63,7 +65,6 @@ def refresh_refresh_token():
     }), 200
 
 
-
 @auth_bp.route('/register', methods=['POST'])
 @validate_body(SignUpRequest)
 def register_user():
@@ -78,6 +79,3 @@ def register_user():
 
     except Exception as e:
         return {"error": f"Internal server error during registration - {e}"}, 500
-
-
-

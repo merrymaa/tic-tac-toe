@@ -34,7 +34,6 @@ class UserAuthenticator:
         @wraps(route_func)
         def wrapper(*args, **kwargs):
             token = UserAuthenticator.extract_token()
-            print(f"=== token = {token}")
             if not token:
                 return jsonify({"msg": "Missing Authorization Header"}), 401
             # if not JwtProvider.validate_access_token(token):

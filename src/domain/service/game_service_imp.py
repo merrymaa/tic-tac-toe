@@ -92,8 +92,7 @@ class GameServiceMinimax(GameService):
                 return False
         return True
 
-    @staticmethod
-    def check_win(field, player) -> bool:
+    def check_win(self, field, player) -> bool:
         for row in field:
             if row[0] == row[1] == row[2] == player:
                 return True
@@ -106,27 +105,25 @@ class GameServiceMinimax(GameService):
 
     def is_game_over(self, game: CurrentGame) -> bool:
         if game.type == "AI":
-            return self.check_win(game.field.field, HUMAN) or self.check_win(game.field.field, AI) or not self._available_steps(
+            return self.check_win(game.field.field, HUMAN) or self.check_win(game.field.field,
+                                                                             AI) or not self._available_steps(
                 game.field.field)
         else:
             return self.check_win(game.field.field, "X") or self.check_win(game.field.field,
                                                                            "O") or not self._available_steps(
                 game.field.field)
 
-    @staticmethod
-    def join_game(player_uuid: str, game: CurrentGame) -> CurrentGame:
+    def join_game(self, player_uuid: str, game: CurrentGame) -> CurrentGame:
 
         game.player_2_uuid = player_uuid
         game.status = "active"
 
         return game
 
-    @staticmethod
-    def check_step(game: CurrentGame, player_uuid: str) -> bool:
+    def check_step(self, game: CurrentGame, player_uuid: str) -> bool:
         return game.step_player == player_uuid
 
-    @staticmethod
-    def change_step(game: CurrentGame, player_uuid: str) -> None:
+    def change_step(self, game: CurrentGame, player_uuid: str) -> None:
         # ход игрока 1
         if game.step_player == game.player_1_uuid == player_uuid:
             game.step_player = game.player_2_uuid
@@ -135,8 +132,7 @@ class GameServiceMinimax(GameService):
         if game.step_player == game.player_2_uuid == player_uuid:
             game.step_player = game.player_1_uuid
 
-    @staticmethod
-    def create_game(player_uuid: str, game_type: str) -> CurrentGame | None:
+    def create_game(self, player_uuid: str, game_type: str) -> CurrentGame | None:
         try:
             if game_type != "HUMAN" and game_type != "AI":
                 raise ValueError

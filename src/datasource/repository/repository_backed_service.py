@@ -105,3 +105,6 @@ class RepositoryBackedService():
 
     def get_user(self, user_uuid) -> User:
         return self.game_repository.get_user(user_uuid)
+
+    def get_statistic(self, n: int) -> dict:
+        return self.game_repository.get_statistic(n)
